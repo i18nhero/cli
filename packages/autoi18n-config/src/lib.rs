@@ -2,12 +2,21 @@ use error::ConfigError;
 
 pub mod error;
 
-#[derive(serde::Serialize, serde::Deserialize, Default)]
+#[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[cfg_attr(test, derive(Debug, PartialEq, Eq))]
 pub struct CliConfig {
     #[serde(rename = "$schema", default = "CliConfig::default_schema_location")]
     pub schema: String,
+}
+
+impl Default for CliConfig {
+    #[inline]
+    fn default() -> Self {
+        Self {
+            schema: Self::default_schema_location(),
+        }
+    }
 }
 
 impl CliConfig {
@@ -21,7 +30,7 @@ impl CliConfig {
     }
 
     #[inline]
-    fn default_schema_location() -> String {
+    pub fn default_schema_location() -> String {
         let package_version = env!("CARGO_PKG_VERSION");
 
         format!(
@@ -32,7 +41,6 @@ impl CliConfig {
 
 #[cfg(test)]
 mod test_config {
-
     use crate::CliConfig;
 
     #[test]
