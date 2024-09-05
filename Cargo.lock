@@ -57,6 +57,7 @@ version = "0.0.0"
 dependencies = [
  "autoi18n-config",
  "clap",
+ "clap_complete",
  "serde_json",
 ]
 
@@ -102,6 +103,15 @@ dependencies = [
  "anstyle",
  "clap_lex",
  "strsim",
+]
+
+[[package]]
+name = "clap_complete"
+version = "4.5.26"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "205d5ef6d485fa47606b98b0ddc4ead26eb850aaa86abfb562a94fb3280ecba0"
+dependencies = [
+ "clap",
 ]
 
 [[package]]

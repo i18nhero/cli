@@ -5,6 +5,7 @@ use config::CONFIG_PATH;
 use error::CliError;
 
 mod commands;
+mod completions;
 mod config;
 mod error;
 mod init;
@@ -16,6 +17,11 @@ fn _main() -> Result<(), CliError> {
         CliCommand::Sync => {
             // TODO
             let _config = CliConfig::load(CONFIG_PATH)?;
+
+            Ok(())
+        }
+        CliCommand::Completions(arguments) => {
+            completions::run(&arguments);
 
             Ok(())
         }
