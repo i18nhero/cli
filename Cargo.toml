@@ -17,6 +17,10 @@ categories = ["command-line-utilities", "development-tools"]
 
 [workspace.dependencies]
 autoi18n-config = { version = "0.0.0", path = "./packages/autoi18n-config" }
+schemars = "0.8.21"
+serde = { version = "1.0.209", features = ["derive"] }
+serde_json = "1.0.128"
+tempfile = "3.12.0"
 
 # Config for 'cargo dist'
 [workspace.metadata.dist]
