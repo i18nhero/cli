@@ -1,0 +1,17 @@
+[workspace]
+members = ["packages/autoi18n"]
+resolver = "2"
+
+
+[workspace.package]
+version = "0.0.0"
+authors = ["Mads Hougesen <mads@mhouge.dk>"]
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/autoi18n/cli"
+documentation = "https://github.com/autoi18n/cli#readme"
+keywords = []
+description = ""
+homepage = "https://autoi18n.com"
+readme = "README.md"
+categories = ["command-line-utilities", "development-tools"]
