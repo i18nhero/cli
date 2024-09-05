@@ -1,6 +1,54 @@
+use std::str::FromStr;
+
 use error::ConfigError;
 
 pub mod error;
+
+#[derive(serde::Serialize, serde::Deserialize, Default)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
+#[cfg_attr(test, derive(Debug, PartialEq, Eq))]
+pub enum CliConfigOutputFormat {
+    #[default]
+    #[serde(rename = "json")]
+    Json,
+}
+
+impl CliConfigOutputFormat {
+    #[inline]
+    pub const fn to_file_ext(&self) -> &'static str {
+        match self {
+            Self::Json => "json",
+        }
+    }
+}
+
+#[derive(serde::Serialize, serde::Deserialize)]
+#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
+#[cfg_attr(test, derive(Debug, PartialEq, Eq))]
+pub struct CliConfigOutput {
+    #[serde(default = "CliConfigOutput::default_path")]
+    pub path: std::path::PathBuf,
+
+    #[serde(default = "CliConfigOutputFormat::default")]
+    pub format: CliConfigOutputFormat,
+}
+
+impl CliConfigOutput {
+    #[inline]
+    fn default_path() -> std::path::PathBuf {
+        std::path::PathBuf::from_str("lang").unwrap()
+    }
+}
+
+impl Default for CliConfigOutput {
+    #[inline]
+    fn default() -> Self {
+        Self {
+            path: Self::default_path(),
+            format: CliConfigOutputFormat::default(),
+        }
+    }
+}
 
 #[derive(serde::Serialize, serde::Deserialize)]
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
@@ -8,6 +56,10 @@ pub mod error;
 pub struct CliConfig {
     #[serde(rename = "$schema", default = "CliConfig::default_schema_location")]
     pub schema: String,
+
+    pub project_id: String,
+
+    pub output: CliConfigOutput,
 }
 
 impl Default for CliConfig {
@@ -15,6 +67,8 @@ impl Default for CliConfig {
     fn default() -> Self {
         Self {
             schema: Self::default_schema_location(),
+            output: CliConfigOutput::default(),
+            project_id: String::new(),
         }
     }
 }

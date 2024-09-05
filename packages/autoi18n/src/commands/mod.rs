@@ -22,8 +22,8 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum CliCommand {
-    /// Synchronize locales   
-    Sync,
+    /// Pull locales   
+    Pull,
 
     /// Create new autoi18n config
     Init(InitCommandArguments),

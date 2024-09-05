@@ -1,11 +1,11 @@
 use autoi18n_config::CliConfig;
 
-use crate::{commands::init::InitCommandArguments, config::CONFIG_PATH, error::init::InitError};
+use crate::{commands::init::InitCommandArguments, config::CONFIG_PATH, error::CliError};
 
 #[inline]
-pub fn run(arguments: &InitCommandArguments) -> Result<(), InitError> {
+pub fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
     if !arguments.overwrite && std::fs::exists(CONFIG_PATH)? {
-        return Err(InitError::ConfigAlreadyExists);
+        return Err(CliError::ConfigAlreadyExists);
     }
 
     let config = CliConfig::default();

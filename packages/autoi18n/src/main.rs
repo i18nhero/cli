@@ -9,16 +9,16 @@ mod completions;
 mod config;
 mod error;
 mod init;
+mod pull;
 
 #[inline]
 fn _main() -> Result<(), CliError> {
     match Cli::parse().command {
         CliCommand::Init(arguments) => init::run(&arguments).map_err(CliError::from),
-        CliCommand::Sync => {
-            // TODO
-            let _config = CliConfig::load(CONFIG_PATH)?;
+        CliCommand::Pull => {
+            let config = CliConfig::load(CONFIG_PATH)?;
 
-            Ok(())
+            pull::run(&config)
         }
         CliCommand::Completions(arguments) => {
             completions::run(&arguments);
