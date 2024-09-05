@@ -19,3 +19,4 @@ license = false
 eula = false
 
 [dependencies]
+autoi18n-config = { workspace = true }

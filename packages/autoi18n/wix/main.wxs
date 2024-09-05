@@ -69,6 +69,7 @@
 
         <Package Id='*'
             Keywords='Installer'
+            Description='CLI tool for autoi18n'
             Manufacturer='Mads Hougesen'
             InstallerVersion='450'
             Languages='1033'

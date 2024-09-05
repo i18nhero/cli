@@ -1,7 +1,6 @@
 [workspace]
-members = ["packages/autoi18n"]
+members = ["packages/autoi18n", "packages/autoi18n-config"]
 resolver = "2"
-
 
 [workspace.package]
 version = "0.0.0"
@@ -10,11 +9,14 @@ edition = "2021"
 license = "MIT"
 repository = "https://github.com/autoi18n/cli"
 documentation = "https://github.com/autoi18n/cli#readme"
-keywords = []
-description = ""
+keywords = ["i18n"]
+description = "CLI tool for autoi18n"
 homepage = "https://autoi18n.com"
 readme = "README.md"
 categories = ["command-line-utilities", "development-tools"]
+
+[workspace.dependencies]
+autoi18n-config = { version = "0.0.0", path = "./packages/autoi18n-config" }
 
 # Config for 'cargo dist'
 [workspace.metadata.dist]
