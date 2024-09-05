@@ -1,6 +1,8 @@
 use clap::{Parser, Subcommand};
+use completions::CompletionsCommandArguments;
 use init::InitCommandArguments;
 
+pub mod completions;
 pub mod init;
 
 const HELP_TEMPLATE: &str = "\
@@ -25,4 +27,7 @@ pub enum CliCommand {
 
     /// Create new autoi18n config
     Init(InitCommandArguments),
+
+    /// Shell completions
+    Completions(CompletionsCommandArguments),
 }
