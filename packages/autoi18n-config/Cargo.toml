@@ -1,0 +1,15 @@
+[package]
+name = "autoi18n-config"
+description = "Config for autoi18n"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+documentation.workspace = true
+keywords.workspace = true
+homepage.workspace = true
+readme.workspace = true
+categories.workspace = true
+
+[dependencies]
