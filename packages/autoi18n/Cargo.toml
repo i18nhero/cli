@@ -12,4 +12,10 @@ documentation.workspace = true
 readme.workspace = true
 categories.workspace = true
 
+[package.metadata.wix]
+upgrade-guid = "6F9AFD36-B151-4A3E-AFDD-154307A499CF"
+path-guid = "E203BA21-081C-408B-9395-A7223571469A"
+license = false
+eula = false
+
 [dependencies]
