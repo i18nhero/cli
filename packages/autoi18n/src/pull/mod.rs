@@ -16,6 +16,7 @@ fn fetch_locales(project_id: &str) -> Result<Vec<PullLocale>, CliError> {
     let url = format!("http://localhost:5000/projects/{project_id}/pull");
 
     reqwest::blocking::get(url)?
+        .error_for_status()?
         .json::<Vec<PullLocale>>()
         .map_err(CliError::from)
 }
