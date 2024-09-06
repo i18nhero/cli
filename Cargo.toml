@@ -21,6 +21,7 @@ clap = { version = "4.5.17", features = ["derive"] }
 clap_complete = "4.5.26"
 schemars = "0.8.21"
 reqwest = { version = "0.12.7", default-features = false, features = [
+  "blocking",
   "brotli",
   "charset",
   "cookies",
@@ -47,13 +48,7 @@ installers = ["shell", "powershell", "npm", "homebrew", "msi"]
 # A GitHub repo to push Homebrew formulas to
 tap = "autoi18n/homebrew-tap"
 # Target platforms to build apps for (Rust target-triple syntax)
-targets = [
-  "aarch64-apple-darwin",
-  "x86_64-apple-darwin",
-  "x86_64-unknown-linux-gnu",
-  "x86_64-unknown-linux-musl",
-  "x86_64-pc-windows-msvc",
-]
+targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-unknown-linux-musl", "x86_64-pc-windows-msvc"]
 # The archive format to use for windows builds (defaults .zip)
 windows-archive = ".tar.gz"
 # The archive format to use for non-windows builds (defaults .tar.xz)
