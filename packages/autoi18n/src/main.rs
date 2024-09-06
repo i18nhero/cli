@@ -10,6 +10,7 @@ mod config;
 mod error;
 mod init;
 mod pull;
+mod push;
 
 #[inline]
 fn _main() -> Result<(), CliError> {
@@ -19,6 +20,11 @@ fn _main() -> Result<(), CliError> {
             let config = CliConfig::load(CONFIG_PATH)?;
 
             pull::run(&config)
+        }
+        CliCommand::Push => {
+            let config = CliConfig::load(CONFIG_PATH)?;
+
+            push::run(&config)
         }
         CliCommand::Completions(arguments) => {
             completions::run(&arguments);
