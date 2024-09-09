@@ -1,9 +1,13 @@
 use clap::{Parser, Subcommand};
 use completions::CompletionsCommandArguments;
 use init::InitCommandArguments;
+use pull::PullCommandArguments;
+use push::PushCommandArguments;
 
 pub mod completions;
 pub mod init;
+pub mod pull;
+pub mod push;
 
 const HELP_TEMPLATE: &str = "\
 {before-help}{name} {version}
@@ -23,10 +27,10 @@ pub struct Cli {
 #[derive(Debug, Subcommand)]
 pub enum CliCommand {
     /// Pull locales
-    Pull,
+    Pull(PullCommandArguments),
 
     /// Push locale keys to autoi18n
-    Push,
+    Push(PushCommandArguments),
 
     /// Create new autoi18n config
     Init(InitCommandArguments),

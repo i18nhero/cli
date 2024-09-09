@@ -1,6 +1,6 @@
 use autoi18n_config::{CliConfig, CliConfigOutputFormat};
 
-use crate::error::CliError;
+use crate::{commands::push::PushCommandArguments, error::CliError, DEFAULT_API_HOST};
 
 #[derive(Debug, serde::Serialize)]
 struct PushLocale {
@@ -42,10 +42,10 @@ fn read_locales(
 }
 
 #[inline]
-fn upload_locales(project_id: &str, locales: &[PushLocale]) -> Result<(), CliError> {
+fn upload_locales(domain: &str, project_id: &str, locales: &[PushLocale]) -> Result<(), CliError> {
     let client = reqwest::blocking::Client::new();
 
-    let url = format!("http://localhost:5000/projects/{project_id}/push");
+    let url = format!("{domain}/projects/{project_id}/push");
 
     client.put(url).json(locales).send()?.error_for_status()?;
 
@@ -53,11 +53,19 @@ fn upload_locales(project_id: &str, locales: &[PushLocale]) -> Result<(), CliErr
 }
 
 #[inline]
-pub fn run(config: &CliConfig) -> Result<(), CliError> {
+pub fn run(arguments: &PushCommandArguments, config: &CliConfig) -> Result<(), CliError> {
     let locales = read_locales(&config.output.path, &config.output.format)?;
 
     if !locales.is_empty() {
-        upload_locales(&config.project_id, &locales)?;
+        upload_locales(
+            if let Some(api_host) = &arguments.api_host {
+                api_host
+            } else {
+                DEFAULT_API_HOST
+            },
+            &config.project_id,
+            &locales,
+        )?;
     }
 
     Ok(())
