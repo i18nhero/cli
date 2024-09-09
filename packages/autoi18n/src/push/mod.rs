@@ -42,10 +42,10 @@ fn read_locales(
 }
 
 #[inline]
-fn upload_locales(domain: &str, project_id: &str, locales: &[PushLocale]) -> Result<(), CliError> {
+fn upload_locales(host: &str, project_id: &str, locales: &[PushLocale]) -> Result<(), CliError> {
     let client = reqwest::blocking::Client::new();
 
-    let url = format!("{domain}/projects/{project_id}/push");
+    let url = format!("{host}/projects/{project_id}/push");
 
     client.put(url).json(locales).send()?.error_for_status()?;
 
@@ -58,11 +58,10 @@ pub fn run(arguments: &PushCommandArguments, config: &CliConfig) -> Result<(), C
 
     if !locales.is_empty() {
         upload_locales(
-            if let Some(api_host) = &arguments.api_host {
-                api_host
-            } else {
-                DEFAULT_API_HOST
-            },
+            arguments
+                .api_host
+                .as_ref()
+                .map_or(DEFAULT_API_HOST, |api_host| api_host),
             &config.project_id,
             &locales,
         )?;
