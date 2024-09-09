@@ -50,6 +50,7 @@ fn save_locales(config: &CliConfig, locales: Vec<PullLocale>) -> Result<(), CliE
 
         let contents = match config.output.format {
             CliConfigOutputFormat::Json => serde_json::to_string_pretty(&locale.translations)?,
+            CliConfigOutputFormat::Yaml => serde_yml::to_string(&locale.translations)?,
         };
 
         std::fs::write(
@@ -68,11 +69,10 @@ pub fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result<(), C
     }
 
     let locales = fetch_locales(
-        if let Some(api_host) = &arguments.api_host {
-            api_host
-        } else {
-            DEFAULT_API_HOST
-        },
+        arguments
+            .api_host
+            .as_ref()
+            .map_or(DEFAULT_API_HOST, |api_host| api_host),
         &config.project_id,
     )?;
 
