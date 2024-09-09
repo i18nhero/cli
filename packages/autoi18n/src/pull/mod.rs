@@ -1,6 +1,6 @@
 use autoi18n_config::{CliConfig, CliConfigOutputFormat};
 
-use crate::error::CliError;
+use crate::{commands::pull::PullCommandArguments, error::CliError, DEFAULT_API_HOST};
 
 #[derive(Debug, serde::Deserialize)]
 struct PullLocale {
@@ -12,8 +12,8 @@ struct PullLocale {
 }
 
 #[inline]
-fn fetch_locales(project_id: &str) -> Result<Vec<PullLocale>, CliError> {
-    let url = format!("http://localhost:5000/projects/{project_id}/pull");
+fn fetch_locales(host: &str, project_id: &str) -> Result<Vec<PullLocale>, CliError> {
+    let url = format!("{host}/projects/{project_id}/pull");
 
     reqwest::blocking::get(url)?
         .error_for_status()?
@@ -62,12 +62,19 @@ fn save_locales(config: &CliConfig, locales: Vec<PullLocale>) -> Result<(), CliE
 }
 
 #[inline]
-pub fn run(config: &CliConfig) -> Result<(), CliError> {
+pub fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result<(), CliError> {
     if config.project_id.is_empty() {
         return Err(CliError::MissingProjectId);
     }
 
-    let locales = fetch_locales(&config.project_id)?;
+    let locales = fetch_locales(
+        if let Some(api_host) = &arguments.api_host {
+            api_host
+        } else {
+            DEFAULT_API_HOST
+        },
+        &config.project_id,
+    )?;
 
     save_locales(config, locales)
 }
