@@ -1,6 +1,6 @@
 use autoi18n_config::{CliConfig, CliConfigOutputFormat};
 
-use crate::{commands::pull::PullCommandArguments, error::CliError, DEFAULT_API_HOST};
+use crate::{commands::pull::PullCommandArguments, error::CliError, generators, DEFAULT_API_HOST};
 
 #[derive(Debug, serde::Deserialize)]
 struct PullLocale {
@@ -48,10 +48,7 @@ fn save_locales(config: &CliConfig, locales: Vec<PullLocale>) -> Result<(), CliE
 
         println!("Saving {file_name}");
 
-        let contents = match config.output.format {
-            CliConfigOutputFormat::Json => serde_json::to_string_pretty(&locale.translations)?,
-            CliConfigOutputFormat::Yaml => serde_yml::to_string(&locale.translations)?,
-        };
+        let contents = generators::stringify(&config.output.format, &locale.translations)?;
 
         std::fs::write(
             config.output.path.join(file_name),

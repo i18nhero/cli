@@ -11,6 +11,8 @@ pub enum CliConfigOutputFormat {
     #[default]
     #[serde(rename = "json")]
     Json,
+    #[serde(rename = "json5")]
+    Json5,
     #[serde(rename = "yaml")]
     Yaml,
 }
@@ -20,6 +22,7 @@ impl CliConfigOutputFormat {
     pub const fn to_file_ext(&self) -> &'static str {
         match self {
             Self::Json => "json",
+            Self::Json5 => "json5",
             Self::Yaml => "yml",
         }
     }
