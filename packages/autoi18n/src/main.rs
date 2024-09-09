@@ -8,6 +8,7 @@ mod commands;
 mod completions;
 mod config;
 mod error;
+pub mod generators;
 mod init;
 mod pull;
 mod push;

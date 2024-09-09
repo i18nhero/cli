@@ -25,8 +25,7 @@ fn read_locales(
             if let Some(stem) = p.file_stem() {
                 let raw = std::fs::read_to_string(&p)?;
 
-                let translations =
-                    serde_json::from_str::<std::collections::HashMap<String, String>>(&raw)?;
+                let translations = crate::generators::parse_input(file_format, &raw)?;
 
                 let locale = PushLocale {
                     file_name: stem.to_string_lossy().to_string(),

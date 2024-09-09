@@ -4,6 +4,7 @@ pub enum CliError {
     Io(std::io::Error),
     SerdeJson(serde_json::Error),
     SerdeYml(serde_yml::Error),
+    Json5(json5::Error),
     Reqwest(reqwest::Error),
     ConfigAlreadyExists,
     MissingProjectId,
@@ -19,6 +20,7 @@ impl core::fmt::Display for CliError {
             Self::Io(e) => e.fmt(f),
             Self::SerdeJson(e) => e.fmt(f),
             Self::SerdeYml(e) => e.fmt(f),
+            Self::Json5(e) => e.fmt(f),
             Self::Reqwest(e) => e.fmt(f),
 
             Self::ConfigAlreadyExists => write!(f, "A configuration file already exists"),
@@ -59,5 +61,12 @@ impl From<serde_yml::Error> for CliError {
     #[inline]
     fn from(value: serde_yml::Error) -> Self {
         Self::SerdeYml(value)
+    }
+}
+
+impl From<json5::Error> for CliError {
+    #[inline]
+    fn from(value: json5::Error) -> Self {
+        Self::Json5(value)
     }
 }
