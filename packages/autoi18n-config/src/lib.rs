@@ -37,6 +37,9 @@ pub struct CliConfigOutput {
 
     #[serde(default = "CliConfigOutputFormat::default")]
     pub format: CliConfigOutputFormat,
+
+    #[serde(default)]
+    pub save_missing_values: bool,
 }
 
 impl CliConfigOutput {
@@ -52,6 +55,7 @@ impl Default for CliConfigOutput {
         Self {
             path: Self::default_path(),
             format: CliConfigOutputFormat::default(),
+            save_missing_values: false,
         }
     }
 }
