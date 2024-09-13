@@ -65,13 +65,20 @@ pub fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result<(), C
         return Err(CliError::MissingProjectId);
     }
 
-    let locales = fetch_locales(
+    let mut locales = fetch_locales(
         arguments
             .api_host
             .as_ref()
             .map_or(DEFAULT_API_HOST, |api_host| api_host),
         &config.project_id,
     )?;
+
+    // TODO: move to api
+    if !config.output.save_missing_values {
+        for locale in &mut locales {
+            locale.translations.retain(|_, v| !v.is_empty());
+        }
+    }
 
     save_locales(config, locales)
 }
