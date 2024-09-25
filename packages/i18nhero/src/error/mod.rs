@@ -8,6 +8,8 @@ pub enum CliError {
     Reqwest(reqwest::Error),
     ConfigAlreadyExists,
     MissingProjectId,
+    NoConnectedOrganizations,
+    NoAvailableProjects((String, String)),
 }
 
 impl std::error::Error for CliError {}
@@ -25,6 +27,13 @@ impl core::fmt::Display for CliError {
 
             Self::ConfigAlreadyExists => write!(f, "A configuration file already exists"),
             Self::MissingProjectId => write!(f, "project_id must be set in config"),
+            Self::NoConnectedOrganizations => {
+                write!(f, "You do not have development access to any organizations")
+            }
+            Self::NoAvailableProjects((organization_title, organization_id)) => write!(
+                f,
+                "You do not have development access to any projects for {organization_title} ({organization_id})" 
+            ),
         }
     }
 }
