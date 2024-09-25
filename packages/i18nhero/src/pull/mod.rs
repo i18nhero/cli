@@ -1,6 +1,8 @@
 use i18nhero_config::{CliConfig, CliConfigOutputFormat};
 
-use crate::{commands::pull::PullCommandArguments, error::CliError, generators, DEFAULT_API_HOST};
+use crate::{
+    commands::pull::PullCommandArguments, error::CliError, generators, DEFAULT_WEB_API_HOST,
+};
 
 #[derive(Debug, serde::Deserialize)]
 struct PullLocale {
@@ -69,7 +71,7 @@ pub fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result<(), C
         arguments
             .api_host
             .as_ref()
-            .map_or(DEFAULT_API_HOST, |api_host| api_host),
+            .map_or(DEFAULT_WEB_API_HOST, |api_host| api_host),
         &config.project_id,
     )?;
 

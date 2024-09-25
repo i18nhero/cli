@@ -1,6 +1,5 @@
-use std::str::FromStr;
-
 use error::ConfigError;
+use std::str::FromStr;
 
 pub mod error;
 
@@ -84,6 +83,14 @@ impl Default for CliConfig {
 }
 
 impl CliConfig {
+    #[inline]
+    pub fn new(project_id: String) -> Self {
+        Self {
+            project_id,
+            ..Default::default()
+        }
+    }
+
     #[inline]
     pub fn load(path: impl AsRef<std::path::Path>) -> Result<Self, ConfigError> {
         let content = std::fs::read_to_string(path)?;
