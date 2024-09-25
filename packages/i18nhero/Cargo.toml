@@ -27,6 +27,7 @@ clap = { workspace = true }
 clap_complete = { workspace = true }
 console = { workspace = true }
 dialoguer = { workspace = true }
+dirs = { workspace = true }
 json5 = { workspace = true }
 reqwest = { workspace = true }
 schemars = { workspace = true, optional = true }

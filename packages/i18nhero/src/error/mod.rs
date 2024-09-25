@@ -16,6 +16,12 @@ pub enum CliError {
     ConfigLoad(std::io::Error),
     ConfigParse(serde_json::Error),
     ConfigSerialize(serde_json::Error),
+    AuthConfigSerialize(serde_json::Error),
+    AuthConfigDeserialize(serde_json::Error),
+    AuthConfigSave(std::io::Error),
+    AuthConfigLoad(std::io::Error),
+    GetOrganizations(reqwest::Error),
+    GetOrganizationProjects(reqwest::Error),
 }
 
 impl std::error::Error for CliError {}
@@ -37,8 +43,8 @@ impl core::fmt::Display for CliError {
                 write!(f, "{message} {organization_title} ({organization_id})")
             }
             Self::ConfigNotFound => write!(f, "Config not found"),
-            Self::ConfigLoad(error) => write!(f, "Error loading config - {error}"),
-            Self::ConfigParse(error) => write!(f, "Error parsing config - {error}"),
+            Self::ConfigLoad(e) => write!(f, "Error loading config - {e}"),
+            Self::ConfigParse(e) => write!(f, "Error parsing config - {e}"),
             Self::SerializeJson(e) => write!(f, "Error serializing file - {e}"),
             Self::SerializeJson5(e) => write!(f, "Error serializing file - {e}"),
             Self::SerializeYml(e) => write!(f, "Error serializing file - {e}"),
@@ -46,6 +52,12 @@ impl core::fmt::Display for CliError {
             Self::DeserializeJson5(e) => write!(f, "Error deserializing file - {e}"),
             Self::DeserializeYml(e) => write!(f, "Error deserializing file - {e}"),
             Self::ConfigSerialize(e) => write!(f, "Error serializing config - {e}"),
+            Self::AuthConfigSerialize(e) => write!(f, "Error serializing auth config - {e}"),
+            Self::AuthConfigDeserialize(e) => write!(f, "Error deserializing auth config - {e}"),
+            Self::AuthConfigSave(e) => write!(f, "Error saving auth - {e}"),
+            Self::AuthConfigLoad(e) => write!(f, "Error loading auth - {e}"),
+            Self::GetOrganizations(e) => write!(f, "Error fetching organizations- {e}"),
+            Self::GetOrganizationProjects(e) => write!(f, "Error fetching projects - {e}"),
         }
     }
 }
