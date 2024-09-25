@@ -1,4 +1,4 @@
-use autoi18n_config::CliConfig;
+use i18nhero_config::CliConfig;
 
 use crate::{commands::init::InitCommandArguments, config::CONFIG_PATH, error::CliError};
 

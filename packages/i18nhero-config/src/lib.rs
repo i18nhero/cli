@@ -98,7 +98,7 @@ impl CliConfig {
         let package_version = env!("CARGO_PKG_VERSION");
 
         format!(
-            "https://raw.githubusercontent.com/autoi18n/cli/main/schemas/v{package_version}/autoi18n.schema.json"
+            "https://raw.githubusercontent.com/i18nhero/cli/main/schemas/v{package_version}/i18nhero.schema.json"
         )
     }
 }

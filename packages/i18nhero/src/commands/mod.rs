@@ -29,10 +29,10 @@ pub enum CliCommand {
     /// Pull locales
     Pull(PullCommandArguments),
 
-    /// Push locale keys to autoi18n
+    /// Push locale keys to i18nhero
     Push(PushCommandArguments),
 
-    /// Create new autoi18n config
+    /// Create new i18nhero config
     Init(InitCommandArguments),
 
     /// Shell completions

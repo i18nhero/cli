@@ -1,4 +1,4 @@
-use autoi18n_config::CliConfigOutputFormat;
+use i18nhero_config::CliConfigOutputFormat;
 
 use crate::error::CliError;
 
