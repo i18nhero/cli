@@ -18,15 +18,22 @@ path-guid = "E203BA21-081C-408B-9395-A7223571469A"
 license = false
 eula = false
 
+[features]
+default = []
+json-schema = ["dep:schemars"]
+
 [dependencies]
-i18nhero-config = { workspace = true }
 clap = { workspace = true }
 clap_complete = { workspace = true }
+console = { workspace = true }
+dialoguer = { workspace = true }
 json5 = { workspace = true }
-reqwest.workspace = true
+reqwest = { workspace = true }
+schemars = { workspace = true, optional = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 serde_yml = { workspace = true }
-dialoguer = "0.11.0"
-console = "0.15.8"
 tokio = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }

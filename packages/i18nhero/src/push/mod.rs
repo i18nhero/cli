@@ -1,6 +1,9 @@
-use i18nhero_config::{CliConfig, CliConfigOutputFormat};
-
-use crate::{commands::push::PushCommandArguments, error::CliError, DEFAULT_WEB_API_HOST};
+use crate::{
+    commands::push::PushCommandArguments,
+    config::{CliConfig, CliConfigOutputFormat},
+    error::CliError,
+    DEFAULT_WEB_API_HOST,
+};
 
 #[derive(Debug, serde::Serialize)]
 struct PushLocale {
@@ -41,18 +44,27 @@ fn read_locales(
 }
 
 #[inline]
-fn upload_locales(host: &str, project_id: &str, locales: &[PushLocale]) -> Result<(), CliError> {
-    let client = reqwest::blocking::Client::new();
+async fn upload_locales(
+    host: &str,
+    project_id: &str,
+    locales: &[PushLocale],
+) -> Result<(), CliError> {
+    let client = reqwest::Client::new();
 
     let url = format!("{host}/projects/{project_id}/push");
 
-    client.put(url).json(locales).send()?.error_for_status()?;
+    client
+        .put(url)
+        .json(locales)
+        .send()
+        .await?
+        .error_for_status()?;
 
     Ok(())
 }
 
 #[inline]
-pub fn run(arguments: &PushCommandArguments, config: &CliConfig) -> Result<(), CliError> {
+pub async fn run(arguments: &PushCommandArguments, config: &CliConfig) -> Result<(), CliError> {
     let locales = read_locales(&config.output.path, &config.output.format)?;
 
     if !locales.is_empty() {
@@ -63,7 +75,8 @@ pub fn run(arguments: &PushCommandArguments, config: &CliConfig) -> Result<(), C
                 .map_or(DEFAULT_WEB_API_HOST, |api_host| api_host),
             &config.project_id,
             &locales,
-        )?;
+        )
+        .await?;
     }
 
     Ok(())

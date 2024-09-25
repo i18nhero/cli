@@ -14,3 +14,11 @@ pub fn print_configuration_file_created() {
             .bold()
     );
 }
+
+#[inline]
+pub fn print_saving_file(file_name: &str) {
+    println!(
+        "{}",
+        console::style(format!("Saving {file_name}")).green().bold()
+    );
+}

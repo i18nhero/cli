@@ -1,16 +1,20 @@
 use dialoguer::{theme::ColorfulTheme, Select};
-use i18nhero_config::CliConfig;
 
 use crate::{
-    auth::get_api_key, commands::init::InitCommandArguments, config::CONFIG_PATH, error::CliError,
-    terminal::print_configuration_file_created, DEFAULT_API_HOST,
+    auth::get_api_key,
+    commands::init::InitCommandArguments,
+    config::{CliConfig, CONFIG_PATH},
+    error::CliError,
+    terminal::print_configuration_file_created,
+    DEFAULT_API_HOST,
 };
 
 #[derive(serde::Deserialize, Debug)]
-pub struct Organization {
-    pub _id: String,
+struct Organization {
+    #[serde(rename = "_id")]
+    id: String,
 
-    pub title: String,
+    title: String,
 }
 
 async fn get_organizations(host: &str, api_key: &str) -> Vec<Organization> {
@@ -31,7 +35,7 @@ fn select_organization(organizations: &Vec<Organization>) -> usize {
     let mut options = Vec::with_capacity(organizations.len());
 
     for org in organizations {
-        options.push(format!("{} ({})", org.title, org._id));
+        options.push(format!("{} ({})", org.title, org.id));
     }
 
     Select::with_theme(&ColorfulTheme::default())
@@ -44,7 +48,9 @@ fn select_organization(organizations: &Vec<Organization>) -> usize {
 
 #[derive(Debug, serde::Deserialize)]
 struct Project {
-    _id: String,
+    #[serde(rename = "_id")]
+    id: String,
+
     title: String,
 }
 
@@ -70,7 +76,7 @@ fn select_project(projects: &Vec<Project>) -> usize {
     let mut options = Vec::with_capacity(projects.len());
 
     for project in projects {
-        options.push(format!("{} ({})", project.title, project._id));
+        options.push(format!("{} ({})", project.title, project.id));
     }
 
     Select::with_theme(&ColorfulTheme::default())
@@ -105,12 +111,12 @@ pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
     // we can unwrap here since it can't be out of bounds
     let selected_organization = organizations.get(organization_index).unwrap();
 
-    let projects = get_organization_projects(host, &api_key, &selected_organization._id).await;
+    let projects = get_organization_projects(host, &api_key, &selected_organization.id).await;
 
     if projects.is_empty() {
         return Err(CliError::NoAvailableProjects((
             selected_organization.title.to_string(),
-            selected_organization._id.to_string(),
+            selected_organization.id.to_string(),
         )));
     }
 
@@ -119,9 +125,9 @@ pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
     // we can unwrap here since it can't be out of bounds
     let selected_project = projects.get(project_index).unwrap();
 
-    let config = CliConfig::new(selected_project._id.to_string());
+    let config = CliConfig::new(selected_project.id.to_string());
 
-    let mut json = serde_json::to_string_pretty(&config)?;
+    let mut json = serde_json::to_string_pretty(&config).map_err(CliError::ConfigSerialize)?;
 
     json.push('\n');
 
