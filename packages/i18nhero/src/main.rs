@@ -1,8 +1,8 @@
-use autoi18n_config::CliConfig;
 use clap::Parser;
 use commands::{Cli, CliCommand};
 use config::CONFIG_PATH;
 use error::CliError;
+use i18nhero_config::CliConfig;
 
 mod commands;
 mod completions;
@@ -13,7 +13,7 @@ mod init;
 mod pull;
 mod push;
 
-pub const DEFAULT_API_HOST: &str = "https://api.autoi18n.mhouge.dk";
+pub const DEFAULT_API_HOST: &str = "https://web.api.i18nhero.com";
 
 #[inline]
 fn _main() -> Result<(), CliError> {

@@ -1,1 +1,1 @@
-# autoi18n-cli
+# @i18nhero/cli

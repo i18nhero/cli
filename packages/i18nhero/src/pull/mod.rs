@@ -1,4 +1,4 @@
-use autoi18n_config::{CliConfig, CliConfigOutputFormat};
+use i18nhero_config::{CliConfig, CliConfigOutputFormat};
 
 use crate::{commands::pull::PullCommandArguments, error::CliError, generators, DEFAULT_API_HOST};
 

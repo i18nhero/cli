@@ -11,12 +11,12 @@ updates:
       interval: monthly
     open-pull-requests-limit: 100
   - package-ecosystem: cargo
-    directory: /packages/autoi18n
+    directory: /packages/i18nhero
     schedule:
       interval: monthly
     open-pull-requests-limit: 100
   - package-ecosystem: cargo
-    directory: /packages/autoi18n-config
+    directory: /packages/i18nhero-config
     schedule:
       interval: monthly
     open-pull-requests-limit: 100

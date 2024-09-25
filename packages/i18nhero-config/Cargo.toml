@@ -1,6 +1,6 @@
 [package]
-name = "autoi18n-config"
-description = "Config for autoi18n"
+name = "i18nhero-config"
+description = "Config for i18nhero"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true

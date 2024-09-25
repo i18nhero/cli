@@ -5,7 +5,7 @@ build:
 
 build-local:
     just build
-    sudo cp target/release/autoi18n /usr/local/bin/autoi18n-local
+    sudo cp target/release/i18nhero /usr/local/bin/i18nhero-local
 
 format:
     just --fmt --unstable .

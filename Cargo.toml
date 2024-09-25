@@ -1,5 +1,5 @@
 [workspace]
-members = ["packages/autoi18n", "packages/autoi18n-config"]
+members = ["packages/i18nhero", "packages/i18nhero-config"]
 resolver = "2"
 
 [workspace.package]
@@ -7,16 +7,16 @@ version = "0.0.0"
 authors = ["Mads Hougesen <mads@mhouge.dk>"]
 edition = "2021"
 license = "MIT"
-repository = "https://github.com/autoi18n/cli"
-documentation = "https://github.com/autoi18n/cli#readme"
+repository = "https://github.com/i18nhero/cli"
+documentation = "https://github.com/i18nhero/cli#readme"
 keywords = ["i18n"]
-description = "CLI tool for autoi18n"
-homepage = "https://autoi18n.com"
+description = "CLI tool for i18nhero"
+homepage = "https://i18nhero.com"
 readme = "README.md"
 categories = ["command-line-utilities", "development-tools"]
 
 [workspace.dependencies]
-autoi18n-config = { version = "0.0.0", path = "./packages/autoi18n-config" }
+i18nhero-config = { version = "0.0.0", path = "./packages/i18nhero-config" }
 clap = { version = "4.5.17", features = ["derive"] }
 clap_complete = "4.5.26"
 json5 = "0.4.1"
@@ -48,7 +48,7 @@ ci = "github"
 # The installers to generate for each app
 installers = ["shell", "powershell", "npm", "homebrew", "msi"]
 # A GitHub repo to push Homebrew formulas to
-tap = "autoi18n/homebrew-tap"
+tap = "i18nhero/homebrew-tap"
 # Target platforms to build apps for (Rust target-triple syntax)
 targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-unknown-linux-musl", "x86_64-pc-windows-msvc"]
 # The archive format to use for windows builds (defaults .zip)
@@ -56,7 +56,7 @@ windows-archive = ".tar.gz"
 # The archive format to use for non-windows builds (defaults .tar.xz)
 unix-archive = ".tar.gz"
 # A namespace to use when publishing this package to the npm registry
-npm-scope = "@autoi18n"
+npm-scope = "@i18nhero"
 # The npm package should have this name
 npm-package = "cli"
 # Path that installers should place binaries in

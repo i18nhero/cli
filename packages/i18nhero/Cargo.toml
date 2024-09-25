@@ -1,5 +1,5 @@
 [package]
-name = "autoi18n"
+name = "i18nhero"
 description.workspace = true
 version.workspace = true
 authors.workspace = true
@@ -19,7 +19,7 @@ license = false
 eula = false
 
 [dependencies]
-autoi18n-config = { workspace = true }
+i18nhero-config = { workspace = true }
 clap = { workspace = true }
 clap_complete = { workspace = true }
 json5 = { workspace = true }

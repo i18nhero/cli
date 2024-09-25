@@ -1,6 +1,6 @@
 #[derive(Debug)]
 pub enum CliError {
-    Config(autoi18n_config::error::ConfigError),
+    Config(i18nhero_config::error::ConfigError),
     Io(std::io::Error),
     SerdeJson(serde_json::Error),
     SerdeYml(serde_yml::Error),
@@ -29,9 +29,9 @@ impl core::fmt::Display for CliError {
     }
 }
 
-impl From<autoi18n_config::error::ConfigError> for CliError {
+impl From<i18nhero_config::error::ConfigError> for CliError {
     #[inline]
-    fn from(value: autoi18n_config::error::ConfigError) -> Self {
+    fn from(value: i18nhero_config::error::ConfigError) -> Self {
         Self::Config(value)
     }
 }

@@ -60,7 +60,7 @@
 
     <Product
         Id='*'
-        Name='autoi18n'
+        Name='i18nhero'
         UpgradeCode='6F9AFD36-B151-4A3E-AFDD-154307A499CF'
         Manufacturer='Mads Hougesen'
         Language='1033'
@@ -69,7 +69,7 @@
 
         <Package Id='*'
             Keywords='Installer'
-            Description='CLI tool for autoi18n'
+            Description='CLI tool for i18nhero'
             Manufacturer='Mads Hougesen'
             InstallerVersion='450'
             Languages='1033'
@@ -83,11 +83,11 @@
             DowngradeErrorMessage='A newer version of [ProductName] is already installed. Setup will now exit.'/>
 
         <Media Id='1' Cabinet='media1.cab' EmbedCab='yes' DiskPrompt='CD-ROM #1'/>
-        <Property Id='DiskPrompt' Value='autoi18n Installation'/>
+        <Property Id='DiskPrompt' Value='i18nhero Installation'/>
 
         <Directory Id='TARGETDIR' Name='SourceDir'>
             <Directory Id='$(var.PlatformProgramFilesFolder)' Name='PFiles'>
-                <Directory Id='APPLICATIONFOLDER' Name='autoi18n'>
+                <Directory Id='APPLICATIONFOLDER' Name='i18nhero'>
                     
                     <!--
                       Enabling the license sidecar file in the installer is a four step process:
@@ -123,9 +123,9 @@
                         <Component Id='binary0' Guid='*'>
                             <File
                                 Id='exe0'
-                                Name='autoi18n.exe'
+                                Name='i18nhero.exe'
                                 DiskId='1'
-                                Source='$(var.CargoTargetBinDir)\autoi18n.exe'
+                                Source='$(var.CargoTargetBinDir)\i18nhero.exe'
                                 KeyPath='yes'/>
                         </Component>
                     </Directory>
@@ -173,7 +173,7 @@
         <!--<Icon Id='ProductICO' SourceFile='wix\Product.ico'/>-->
         <!--<Property Id='ARPPRODUCTICON' Value='ProductICO' />-->
 
-        <Property Id='ARPHELPLINK' Value='https://github.com/autoi18n/cli#readme'/>
+        <Property Id='ARPHELPLINK' Value='https://github.com/i18nhero/cli#readme'/>
         
         <UI>
             <UIRef Id='WixUI_FeatureTree'/>
