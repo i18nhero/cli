@@ -15,8 +15,3 @@ updates:
     schedule:
       interval: monthly
     open-pull-requests-limit: 100
-  - package-ecosystem: cargo
-    directory: /packages/i18nhero-config
-    schedule:
-      interval: monthly
-    open-pull-requests-limit: 100

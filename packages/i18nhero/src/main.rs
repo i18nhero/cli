@@ -1,8 +1,7 @@
 use clap::Parser;
 use commands::{Cli, CliCommand};
-use config::CONFIG_PATH;
+use config::{CliConfig, CONFIG_PATH};
 use error::CliError;
-use i18nhero_config::CliConfig;
 
 mod auth;
 mod commands;
@@ -22,16 +21,16 @@ pub const DEFAULT_WEB_API_HOST: &str = "https://web.api.i18nhero.com";
 #[inline]
 async fn _main() -> Result<(), CliError> {
     match Cli::parse().command {
-        CliCommand::Init(arguments) => init::run(&arguments).await.map_err(CliError::from),
+        CliCommand::Init(arguments) => init::run(&arguments).await,
         CliCommand::Pull(arguments) => {
             let config = CliConfig::load(CONFIG_PATH)?;
 
-            pull::run(&arguments, &config)
+            pull::run(&arguments, &config).await
         }
         CliCommand::Push(arguments) => {
             let config = CliConfig::load(CONFIG_PATH)?;
 
-            push::run(&arguments, &config)
+            push::run(&arguments, &config).await
         }
         CliCommand::Completions(arguments) => {
             completions::run(&arguments);

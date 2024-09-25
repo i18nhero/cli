@@ -1,5 +1,5 @@
 [workspace]
-members = ["packages/i18nhero", "packages/i18nhero-config"]
+members = ["packages/i18nhero"]
 resolver = "2"
 
 [workspace.package]
@@ -16,12 +16,12 @@ readme = "README.md"
 categories = ["command-line-utilities", "development-tools"]
 
 [workspace.dependencies]
-i18nhero-config = { version = "0.0.0", path = "./packages/i18nhero-config" }
 clap = { version = "4.5.17", features = ["derive"] }
 clap_complete = "4.5.26"
+console = { version = "0.15.8" }
+dialoguer = { version = "0.11.0" }
 json5 = "0.4.1"
 reqwest = { version = "0.12.7", default-features = false, features = [
-  "blocking",
   "brotli",
   "charset",
   "cookies",

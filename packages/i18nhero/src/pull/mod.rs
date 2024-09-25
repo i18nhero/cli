@@ -1,7 +1,10 @@
-use i18nhero_config::{CliConfig, CliConfigOutputFormat};
-
 use crate::{
-    commands::pull::PullCommandArguments, error::CliError, generators, DEFAULT_WEB_API_HOST,
+    commands::pull::PullCommandArguments,
+    config::{CliConfig, CliConfigOutputFormat},
+    error::CliError,
+    generators,
+    terminal::print_saving_file,
+    DEFAULT_WEB_API_HOST,
 };
 
 #[derive(Debug, serde::Deserialize)]
@@ -14,13 +17,15 @@ struct PullLocale {
 }
 
 #[inline]
-fn fetch_locales(host: &str, project_id: &str) -> Result<Vec<PullLocale>, CliError> {
+async fn fetch_locales(host: &str, project_id: &str) -> Result<Vec<PullLocale>, CliError> {
     let url = format!("{host}/projects/{project_id}/pull");
 
-    reqwest::blocking::get(url)?
+    reqwest::get(url)
+        .await?
         .error_for_status()?
         .json::<Vec<PullLocale>>()
-        .map_err(CliError::from)
+        .await
+        .map_err(CliError::Reqwest)
 }
 
 #[inline]
@@ -38,7 +43,7 @@ fn locale_file_name(
 }
 
 #[inline]
-fn save_locales(config: &CliConfig, locales: Vec<PullLocale>) -> Result<(), CliError> {
+async fn save_locales(config: &CliConfig, locales: Vec<PullLocale>) -> Result<(), CliError> {
     let _ = std::fs::create_dir_all(&config.output.path);
 
     for locale in locales {
@@ -48,21 +53,22 @@ fn save_locales(config: &CliConfig, locales: Vec<PullLocale>) -> Result<(), CliE
             &config.output.format,
         );
 
-        println!("Saving {file_name}");
+        print_saving_file(&file_name);
 
         let contents = generators::stringify(&config.output.format, &locale.translations)?;
 
-        std::fs::write(
+        tokio::fs::write(
             config.output.path.join(file_name),
             format!("{}\n", contents.trim()),
-        )?;
+        )
+        .await?;
     }
 
     Ok(())
 }
 
 #[inline]
-pub fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result<(), CliError> {
+pub async fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result<(), CliError> {
     if config.project_id.is_empty() {
         return Err(CliError::MissingProjectId);
     }
@@ -73,7 +79,8 @@ pub fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result<(), C
             .as_ref()
             .map_or(DEFAULT_WEB_API_HOST, |api_host| api_host),
         &config.project_id,
-    )?;
+    )
+    .await?;
 
     // TODO: move to api
     if !config.output.save_missing_values {
@@ -82,5 +89,5 @@ pub fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result<(), C
         }
     }
 
-    save_locales(config, locales)
+    save_locales(config, locales).await
 }
