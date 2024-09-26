@@ -26,6 +26,12 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum CliCommand {
+    /// Login to i18nhero
+    Login,
+
+    /// Logout from i18nhero
+    Logout,
+
     /// Pull locales
     Pull(PullCommandArguments),
 

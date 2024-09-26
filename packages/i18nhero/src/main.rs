@@ -21,6 +21,8 @@ pub const DEFAULT_WEB_API_HOST: &str = "https://web.api.i18nhero.com";
 #[inline]
 async fn _main() -> Result<(), CliError> {
     match Cli::parse().command {
+        CliCommand::Login => auth::login::run().map(|_api_key| ()),
+        CliCommand::Logout => auth::logout::run(),
         CliCommand::Init(arguments) => init::run(&arguments).await,
         CliCommand::Pull(arguments) => {
             let config = CliConfig::load(CONFIG_PATH)?;

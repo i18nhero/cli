@@ -21,11 +21,13 @@ async fn fetch_locales(host: &str, project_id: &str) -> Result<Vec<PullLocale>, 
     let url = format!("{host}/projects/{project_id}/pull");
 
     reqwest::get(url)
-        .await?
-        .error_for_status()?
+        .await
+        .map_err(CliError::PullLocaleHttp)?
+        .error_for_status()
+        .map_err(CliError::PullLocaleHttp)?
         .json::<Vec<PullLocale>>()
         .await
-        .map_err(CliError::Reqwest)
+        .map_err(CliError::PullLocaleHttp)
 }
 
 #[inline]
@@ -61,7 +63,8 @@ async fn save_locales(config: &CliConfig, locales: Vec<PullLocale>) -> Result<()
             config.output.path.join(file_name),
             format!("{}\n", contents.trim()),
         )
-        .await?;
+        .await
+        .map_err(CliError::LocaleSave)?;
     }
 
     Ok(())

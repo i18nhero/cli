@@ -1,7 +1,7 @@
 use dialoguer::{theme::ColorfulTheme, Select};
 
 use crate::{
-    auth::get_api_key,
+    auth::AuthConfig,
     commands::init::InitCommandArguments,
     config::{CliConfig, CONFIG_PATH},
     error::CliError,
@@ -17,7 +17,8 @@ struct Organization {
     title: String,
 }
 
-async fn get_organizations(host: &str, api_key: &str) -> Vec<Organization> {
+#[inline]
+async fn get_organizations(host: &str, api_key: &str) -> Result<Vec<Organization>, CliError> {
     let http_client = reqwest::Client::new();
 
     http_client
@@ -25,12 +26,15 @@ async fn get_organizations(host: &str, api_key: &str) -> Vec<Organization> {
         .header("x-api-key", api_key)
         .send()
         .await
-        .unwrap()
+        .map_err(CliError::GetOrganizations)?
+        .error_for_status()
+        .map_err(CliError::GetOrganizations)?
         .json::<Vec<Organization>>()
         .await
-        .unwrap()
+        .map_err(CliError::GetOrganizations)
 }
 
+#[inline]
 fn select_organization(organizations: &Vec<Organization>) -> usize {
     let mut options = Vec::with_capacity(organizations.len());
 
@@ -54,11 +58,12 @@ struct Project {
     title: String,
 }
 
+#[inline]
 async fn get_organization_projects(
     host: &str,
     api_key: &str,
     organization_id: &str,
-) -> Vec<Project> {
+) -> Result<Vec<Project>, CliError> {
     let http_client = reqwest::Client::new();
 
     http_client
@@ -66,12 +71,15 @@ async fn get_organization_projects(
         .header("x-api-key", api_key)
         .send()
         .await
-        .unwrap()
+        .map_err(CliError::GetOrganizationProjects)?
+        .error_for_status()
+        .map_err(CliError::GetOrganizationProjects)?
         .json::<Vec<Project>>()
         .await
-        .unwrap()
+        .map_err(CliError::GetOrganizationProjects)
 }
 
+#[inline]
 fn select_project(projects: &Vec<Project>) -> usize {
     let mut options = Vec::with_capacity(projects.len());
 
@@ -89,18 +97,18 @@ fn select_project(projects: &Vec<Project>) -> usize {
 
 #[inline]
 pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
-    if !arguments.overwrite && std::fs::exists(CONFIG_PATH)? {
+    if !arguments.overwrite && std::fs::exists(CONFIG_PATH).map_err(CliError::Io)? {
         return Err(CliError::ConfigAlreadyExists);
     }
 
-    let api_key = get_api_key().await?;
+    let auth = AuthConfig::load()?;
 
     let host = arguments
         .api_host
         .as_ref()
         .map_or(DEFAULT_API_HOST, |api_host| api_host);
 
-    let organizations = get_organizations(host, &api_key).await;
+    let organizations = get_organizations(host, &auth.api_key).await?;
 
     if organizations.is_empty() {
         return Err(CliError::NoConnectedOrganizations);
@@ -111,7 +119,8 @@ pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
     // we can unwrap here since it can't be out of bounds
     let selected_organization = organizations.get(organization_index).unwrap();
 
-    let projects = get_organization_projects(host, &api_key, &selected_organization.id).await;
+    let projects =
+        get_organization_projects(host, &auth.api_key, &selected_organization.id).await?;
 
     if projects.is_empty() {
         return Err(CliError::NoAvailableProjects((
@@ -131,7 +140,7 @@ pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
 
     json.push('\n');
 
-    std::fs::write(CONFIG_PATH, json)?;
+    std::fs::write(CONFIG_PATH, json).map_err(CliError::ConfigSave)?;
 
     print_configuration_file_created();
 
