@@ -21,12 +21,12 @@ fn read_locales(
 
     let mut locales = Vec::new();
 
-    for entry in (std::fs::read_dir(folder)?).flatten() {
+    for entry in (std::fs::read_dir(folder).map_err(CliError::LocaleRead)?).flatten() {
         let p = entry.path();
 
         if p.is_file() && p.extension().is_some_and(|ext| ext == expected_file_ext) {
             if let Some(stem) = p.file_stem() {
-                let raw = std::fs::read_to_string(&p)?;
+                let raw = std::fs::read_to_string(&p).map_err(CliError::LocaleRead)?;
 
                 let translations = crate::generators::parse_input(file_format, &raw)?;
 
@@ -57,8 +57,10 @@ async fn upload_locales(
         .put(url)
         .json(locales)
         .send()
-        .await?
-        .error_for_status()?;
+        .await
+        .map_err(CliError::PushLocaleHttp)?
+        .error_for_status()
+        .map_err(CliError::PushLocaleHttp)?;
 
     Ok(())
 }

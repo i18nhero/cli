@@ -1,45 +1,70 @@
+use login::prompt_should_login;
+
 use crate::error::CliError;
+
+pub mod login;
+pub mod logout;
 
 #[derive(serde::Deserialize, serde::Serialize)]
 pub struct AuthConfig {
     pub api_key: String,
 }
 
-const AUTH_CONFIG_FILE_NAME: &str = ".auth.json";
-
 impl AuthConfig {
     #[inline]
-    fn get_config_dir() -> std::path::PathBuf {
+    const fn new(api_key: String) -> Self {
+        Self { api_key }
+    }
+
+    #[inline]
+    fn get_auth_config_path() -> std::path::PathBuf {
         // TODO: handle None?
-        dirs::config_dir()
+        let dir = dirs::config_dir()
             .or_else(dirs::home_dir)
             .unwrap()
-            .join(".i18nhero")
+            .join(".i18nhero");
+
+        let _ = std::fs::create_dir_all(&dir);
+
+        dir.join(".auth.json")
     }
 
     #[inline]
     pub fn load() -> Result<Self, CliError> {
-        let dir = AuthConfig::get_config_dir();
+        let path = Self::get_auth_config_path();
 
-        let _ = std::fs::create_dir_all(&dir);
+        if !std::fs::exists(&path).map_err(CliError::Io)? {
+            if prompt_should_login() {
+                return login::run();
+            }
 
-        let contents = std::fs::read_to_string(dir.join(AUTH_CONFIG_FILE_NAME))
-            .map_err(CliError::AuthConfigLoad)?;
+            std::process::exit(0);
+        }
 
-        serde_json::from_str::<AuthConfig>(&contents).map_err(CliError::AuthConfigDeserialize)
+        let contents = std::fs::read_to_string(path).map_err(CliError::AuthConfigLoad)?;
+
+        serde_json::from_str(&contents).map_err(CliError::AuthConfigDeserialize)
     }
 
     #[inline]
     fn save(&self) -> Result<(), CliError> {
         let contents = serde_json::to_string_pretty(self).map_err(CliError::AuthConfigSerialize)?;
 
-        let dir = Self::get_config_dir();
+        let path = Self::get_auth_config_path();
 
-        let _ = std::fs::create_dir_all(&dir);
-
-        std::fs::write(dir.join(AUTH_CONFIG_FILE_NAME), contents)
-            .map_err(CliError::AuthConfigSave)?;
+        std::fs::write(path, contents).map_err(CliError::AuthConfigSave)?;
 
         Ok(())
+    }
+
+    #[inline]
+    fn remove() -> std::io::Result<()> {
+        let path = Self::get_auth_config_path();
+
+        if std::fs::exists(&path)? {
+            std::fs::remove_file(&path)
+        } else {
+            Ok(())
+        }
     }
 }

@@ -17,6 +17,7 @@ struct Organization {
     title: String,
 }
 
+#[inline]
 async fn get_organizations(host: &str, api_key: &str) -> Result<Vec<Organization>, CliError> {
     let http_client = reqwest::Client::new();
 
@@ -26,11 +27,14 @@ async fn get_organizations(host: &str, api_key: &str) -> Result<Vec<Organization
         .send()
         .await
         .map_err(CliError::GetOrganizations)?
+        .error_for_status()
+        .map_err(CliError::GetOrganizations)?
         .json::<Vec<Organization>>()
         .await
         .map_err(CliError::GetOrganizations)
 }
 
+#[inline]
 fn select_organization(organizations: &Vec<Organization>) -> usize {
     let mut options = Vec::with_capacity(organizations.len());
 
@@ -54,6 +58,7 @@ struct Project {
     title: String,
 }
 
+#[inline]
 async fn get_organization_projects(
     host: &str,
     api_key: &str,
@@ -67,11 +72,14 @@ async fn get_organization_projects(
         .send()
         .await
         .map_err(CliError::GetOrganizationProjects)?
+        .error_for_status()
+        .map_err(CliError::GetOrganizationProjects)?
         .json::<Vec<Project>>()
         .await
         .map_err(CliError::GetOrganizationProjects)
 }
 
+#[inline]
 fn select_project(projects: &Vec<Project>) -> usize {
     let mut options = Vec::with_capacity(projects.len());
 
@@ -132,7 +140,7 @@ pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
 
     json.push('\n');
 
-    std::fs::write(CONFIG_PATH, json)?;
+    std::fs::write(CONFIG_PATH, json).map_err(CliError::ConfigSave)?;
 
     print_configuration_file_created();
 

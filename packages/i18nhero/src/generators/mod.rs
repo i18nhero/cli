@@ -1,5 +1,6 @@
 use crate::{config::CliConfigOutputFormat, error::CliError};
 
+#[inline]
 pub fn parse_input(
     format: &CliConfigOutputFormat,
     contents: &str,
@@ -17,6 +18,7 @@ pub fn parse_input(
     }
 }
 
+#[inline]
 pub fn stringify(
     format: &CliConfigOutputFormat,
     translations: &std::collections::BTreeMap<String, String>,
