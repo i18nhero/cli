@@ -28,12 +28,10 @@ clap_complete = { workspace = true }
 console = { workspace = true }
 dialoguer = { workspace = true }
 dirs = { workspace = true }
-json5 = { workspace = true }
 reqwest = { workspace = true }
 schemars = { workspace = true, optional = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-serde_yml = { workspace = true }
 supports-hyperlinks = { workspace = true }
 terminal-link = { workspace = true }
 tokio = { workspace = true }

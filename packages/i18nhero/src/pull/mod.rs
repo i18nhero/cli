@@ -1,8 +1,8 @@
 use crate::{
+    auth::AuthConfig,
     commands::pull::PullCommandArguments,
     config::{CliConfig, CliConfigOutputFormat},
     error::CliError,
-    generators,
     terminal::print_saving_file,
     DEFAULT_WEB_API_HOST,
 };
@@ -13,14 +13,21 @@ struct PullLocale {
 
     country_code: Option<String>,
 
-    translations: std::collections::BTreeMap<String, String>,
+    content: String,
 }
 
 #[inline]
-async fn fetch_locales(host: &str, project_id: &str) -> Result<Vec<PullLocale>, CliError> {
-    let url = format!("{host}/projects/{project_id}/pull");
+async fn fetch_locales(
+    api_key: &str,
+    host: &str,
+    project_id: &str,
+) -> Result<Vec<PullLocale>, CliError> {
+    let client = reqwest::Client::new();
 
-    reqwest::get(url)
+    client
+        .get(format!("{host}/projects/{project_id}/pull"))
+        .header("x-api-key", api_key)
+        .send()
         .await
         .map_err(CliError::PullLocaleHttp)?
         .error_for_status()
@@ -57,11 +64,9 @@ async fn save_locales(config: &CliConfig, locales: Vec<PullLocale>) -> Result<()
 
         print_saving_file(&file_name);
 
-        let contents = generators::stringify(&config.output.format, &locale.translations)?;
-
         tokio::fs::write(
             config.output.path.join(file_name),
-            format!("{}\n", contents.trim()),
+            format!("{}\n", locale.content.trim()),
         )
         .await
         .map_err(CliError::LocaleSave)?;
@@ -76,7 +81,10 @@ pub async fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result
         return Err(CliError::MissingProjectId);
     }
 
-    let mut locales = fetch_locales(
+    let auth = AuthConfig::load()?;
+
+    let locales = fetch_locales(
+        &auth.api_key,
         arguments
             .api_host
             .as_ref()
@@ -84,13 +92,6 @@ pub async fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result
         &config.project_id,
     )
     .await?;
-
-    // TODO: move to api
-    if !config.output.save_missing_values {
-        for locale in &mut locales {
-            locale.translations.retain(|_, v| !v.is_empty());
-        }
-    }
 
     save_locales(config, locales).await
 }

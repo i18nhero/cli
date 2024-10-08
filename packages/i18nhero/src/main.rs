@@ -8,7 +8,6 @@ mod commands;
 mod completions;
 mod config;
 mod error;
-mod generators;
 mod init;
 mod pull;
 mod push;
@@ -43,10 +42,11 @@ async fn _main() -> Result<(), CliError> {
 }
 
 #[tokio::main]
+#[expect(clippy::needless_return)]
 async fn main() {
     if let Err(error) = _main().await {
         terminal::print_error(&error);
 
-        std::process::exit(1)
+        std::process::exit(1);
     }
 }
