@@ -1,4 +1,5 @@
 use crate::{
+    auth::AuthConfig,
     commands::push::PushCommandArguments,
     config::{CliConfig, CliConfigOutputFormat},
     error::CliError,
@@ -9,7 +10,9 @@ use crate::{
 struct PushLocale {
     file_name: String,
 
-    translations: std::collections::HashMap<String, String>,
+    file_format: String,
+
+    content: String,
 }
 
 #[inline]
@@ -28,11 +31,10 @@ fn read_locales(
             if let Some(stem) = p.file_stem() {
                 let raw = std::fs::read_to_string(&p).map_err(CliError::LocaleRead)?;
 
-                let translations = crate::generators::parse_input(file_format, &raw)?;
-
                 let locale = PushLocale {
                     file_name: stem.to_string_lossy().to_string(),
-                    translations,
+                    file_format: expected_file_ext.to_string(),
+                    content: raw,
                 };
 
                 locales.push(locale);
@@ -45,16 +47,16 @@ fn read_locales(
 
 #[inline]
 async fn upload_locales(
+    api_key: &str,
     host: &str,
     project_id: &str,
     locales: &[PushLocale],
 ) -> Result<(), CliError> {
     let client = reqwest::Client::new();
 
-    let url = format!("{host}/projects/{project_id}/push");
-
     client
-        .put(url)
+        .put(format!("{host}/projects/{project_id}/push"))
+        .header("x-api-key", api_key)
         .json(locales)
         .send()
         .await
@@ -70,7 +72,10 @@ pub async fn run(arguments: &PushCommandArguments, config: &CliConfig) -> Result
     let locales = read_locales(&config.output.path, &config.output.format)?;
 
     if !locales.is_empty() {
+        let auth = AuthConfig::load()?;
+
         upload_locales(
+            &auth.api_key,
             arguments
                 .api_host
                 .as_ref()
