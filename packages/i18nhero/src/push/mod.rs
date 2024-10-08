@@ -24,6 +24,9 @@ fn read_locales(
 
     let mut locales = Vec::new();
 
+    // TODO: log warning?
+    let _ = std::fs::create_dir_all(folder);
+
     for entry in (std::fs::read_dir(folder).map_err(CliError::LocaleRead)?).flatten() {
         let p = entry.path();
 
