@@ -6,7 +6,7 @@ use crate::{
     config::{CliConfig, CONFIG_PATH},
     error::CliError,
     terminal::print_configuration_file_created,
-    DEFAULT_API_HOST,
+    DEFAULT_CLI_API_HOST,
 };
 
 #[derive(serde::Deserialize, Debug)]
@@ -103,12 +103,12 @@ pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
 
     let auth = AuthConfig::load()?;
 
-    let host = arguments
-        .api_host
+    let cli_api_host = arguments
+        .cli_api_host
         .as_ref()
-        .map_or(DEFAULT_API_HOST, |api_host| api_host);
+        .map_or(DEFAULT_CLI_API_HOST, |host| host);
 
-    let organizations = get_organizations(host, &auth.api_key).await?;
+    let organizations = get_organizations(cli_api_host, &auth.api_key).await?;
 
     if organizations.is_empty() {
         return Err(CliError::NoConnectedOrganizations);
@@ -120,7 +120,7 @@ pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
     let selected_organization = organizations.get(organization_index).unwrap();
 
     let projects =
-        get_organization_projects(host, &auth.api_key, &selected_organization.id).await?;
+        get_organization_projects(cli_api_host, &auth.api_key, &selected_organization.id).await?;
 
     if projects.is_empty() {
         return Err(CliError::NoAvailableProjects((

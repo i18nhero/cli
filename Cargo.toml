@@ -16,11 +16,14 @@ readme = "README.md"
 categories = ["command-line-utilities", "development-tools"]
 
 [workspace.dependencies]
+bytes = "1.7.2"
 clap = { version = "4.5.18", features = ["derive"] }
 clap_complete = "4.5.29"
 console = { version = "0.15.8" }
-dirs = { version = "5.0.1" }
 dialoguer = { version = "0.11.0" }
+dirs = { version = "5.0.1" }
+futures-core = "0.3.31"
+progenitor-client = "0.8.0"
 reqwest = { version = "0.12.8", default-features = false, features = [
   "brotli",
   "charset",
@@ -36,6 +39,7 @@ reqwest = { version = "0.12.8", default-features = false, features = [
 schemars = "0.8.21"
 serde = { version = "1.0.210", features = ["derive"] }
 serde_json = "1.0.128"
+serde_urlencoded = "0.7.1"
 supports-hyperlinks = "3.0.0"
 tempfile = "3.13.0"
 terminal-link = "0.1.0"

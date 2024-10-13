@@ -4,6 +4,7 @@ use config::{CliConfig, CONFIG_PATH};
 use error::CliError;
 
 mod auth;
+mod codegen;
 mod commands;
 mod completions;
 mod config;
@@ -13,7 +14,7 @@ mod pull;
 mod push;
 mod terminal;
 
-pub const DEFAULT_API_HOST: &str = "https://cli.api.i18nhero.com";
+pub const DEFAULT_CLI_API_HOST: &str = "https://cli.api.i18nhero.com";
 
 pub const DEFAULT_WEB_API_HOST: &str = "https://web.api.i18nhero.com";
 
@@ -42,7 +43,6 @@ async fn _main() -> Result<(), CliError> {
 }
 
 #[tokio::main]
-#[expect(clippy::needless_return)]
 async fn main() {
     if let Err(error) = _main().await {
         terminal::print_error(&error);

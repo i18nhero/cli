@@ -1,10 +1,10 @@
 use std::str::FromStr;
 
-use crate::error::CliError;
+use crate::{codegen::web_api::types::FileFormat, error::CliError};
 
 pub const CONFIG_PATH: &str = "i18nhero.json";
 
-#[derive(serde::Serialize, serde::Deserialize, Default)]
+#[derive(serde::Serialize, serde::Deserialize, Default, Clone, Copy)]
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[cfg_attr(test, derive(Debug, PartialEq, Eq))]
 pub enum CliConfigOutputFormat {
@@ -15,9 +15,17 @@ pub enum CliConfigOutputFormat {
 
 impl CliConfigOutputFormat {
     #[inline]
-    pub const fn to_file_ext(&self) -> &'static str {
+    pub const fn file_extension(self) -> &'static str {
         match self {
             Self::Json => "json",
+        }
+    }
+}
+
+impl From<CliConfigOutputFormat> for FileFormat {
+    fn from(value: CliConfigOutputFormat) -> Self {
+        match value {
+            CliConfigOutputFormat::Json => Self::Json,
         }
     }
 }

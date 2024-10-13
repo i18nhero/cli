@@ -1,8 +1,8 @@
 #[derive(Debug)]
 pub enum CliError {
     Io(std::io::Error),
-    PushLocaleHttp(reqwest::Error),
-    PullLocaleHttp(reqwest::Error),
+    PushLocaleHttp(progenitor_client::Error),
+    PullLocaleHttp(progenitor_client::Error),
     ConfigAlreadyExists,
     MissingProjectId,
     NoConnectedOrganizations,

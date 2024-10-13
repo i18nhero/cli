@@ -35,7 +35,30 @@ test-coverage:
 changelog:
     npx auto-changelog -u
 
+generate-web-api:
+    wget https://web.api.i18nhero.com/docs-json -O web.api.i18nhero.spec.json
+    cargo progenitor -i web.api.i18nhero.spec.json -o web-api -n web-api -v 0.0.0
+    mkdir -p packages/i18nhero/src/codegen/web_api
+    rm -rf packages/i18nhero/src/codegen/web_api
+    mv web-api/src/lib.rs web-api/src/mod.rs
+    mv web-api/src packages/i18nhero/src/codegen/web_api
+    rm -rf web-api
+    just format
+
+generate-cli-api:
+    wget https://cli.api.i18nhero.com/spec -O cli.api.i18nhero.spec.json
+    cargo progenitor -i cli.api.i18nhero.spec.json -o cli-api -n cli-api -v 0.0.0
+    mkdir -p packages/i18nhero/src/codegen/cli_api
+    rm -rf packages/i18nhero/src/codegen/cli_api
+    mv cli-api/src/lib.rs cli-api/src/mod.rs
+    mv cli-api/src packages/i18nhero/src/codegen/cli_api
+    rm -rf cli-api
+    just format
+
 precommit:
+    # will fail once progenitor adds support for multiple response types
+    ! just generate-cli-api
+    just generate-web-api
     just changelog
     cargo clean
     cargo dist init --yes

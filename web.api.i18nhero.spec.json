@@ -1,0 +1,2299 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "get": {
+        "operationId": "getUserById",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Users"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/users/{user_id}/organizations": {
+      "get": {
+        "operationId": "getOrganizationsByUserId",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Organization" }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Users"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/users/{user_id}/organizations/{organization_id}/leave": {
+      "put": {
+        "operationId": "leaveOrganization",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "organization_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "" },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Users"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/organizations": {
+      "post": {
+        "operationId": "createOrganization",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrganizationInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Organization" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/organizations/{organization_id}": {
+      "get": {
+        "operationId": "getOrganizationById",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Organization" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      },
+      "put": {
+        "operationId": "updateOrganizationById",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrganizationInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Organization" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/organizations/{organization_id}/projects": {
+      "get": {
+        "operationId": "getProjectsByOrganizationId",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Project" }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/organizations/{organization_id}/users": {
+      "get": {
+        "operationId": "getOrganizationMembers",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/OrganizationMember" }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/organizations/{organization_id}/users/{user_id}/remove": {
+      "put": {
+        "operationId": "removeUserFromOrganization",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "" },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/organizations/{organization_id}/invites": {
+      "get": {
+        "operationId": "getPendingOrganizationInvites",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/OrganizationInvite" }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      },
+      "post": {
+        "operationId": "inviteUserToOrganization",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrganizationInviteInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "" },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/organizations/{organization_id}/overview/projects": {
+      "get": {
+        "operationId": "getOrganizationProjectOverview",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationProjectOverview"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Organizations"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/projects": {
+      "post": {
+        "operationId": "createProject",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateProjectInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Project" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Projects"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/projects/{project_id}": {
+      "get": {
+        "operationId": "getProjectById",
+        "parameters": [
+          {
+            "name": "project_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Project" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Projects"],
+        "security": [{ "bearer": [] }]
+      },
+      "put": {
+        "operationId": "updateProjectById",
+        "parameters": [
+          {
+            "name": "project_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateProjectInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Project" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Projects"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/projects/{project_id}/translations": {
+      "get": {
+        "operationId": "getProjectTranslations",
+        "parameters": [
+          {
+            "name": "project_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Translation" }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Projects"],
+        "security": [{ "bearer": [] }]
+      },
+      "post": {
+        "operationId": "createTranslation",
+        "parameters": [
+          {
+            "name": "project_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTranslationInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Translation" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Projects"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/projects/{project_id}/pull": {
+      "get": {
+        "operationId": "pullProject",
+        "parameters": [
+          {
+            "name": "project_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "x-api-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "flat",
+            "required": true,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExportProjectOutput"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Projects"]
+      }
+    },
+    "/projects/{project_id}/push": {
+      "put": {
+        "operationId": "pushLocalesToProject",
+        "parameters": [
+          {
+            "name": "project_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "x-api-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PushLocaleInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PushLocaleResult" }
+              }
+            }
+          }
+        },
+        "tags": ["Projects"]
+      }
+    },
+    "/projects/{project_id}/webhooks": {
+      "get": {
+        "operationId": "getProjectWebhooks",
+        "parameters": [
+          {
+            "name": "project_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ProjectWebhook" }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Projects"],
+        "security": [{ "bearer": [] }]
+      },
+      "post": {
+        "operationId": "createProjectWebhook",
+        "parameters": [
+          {
+            "name": "project_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProjectWebhookInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProjectWebhook" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Projects"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/projects/{project_id}/metrics": {
+      "get": {
+        "operationId": "getProjectMetrics",
+        "parameters": [
+          {
+            "name": "project_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProjectMetrics" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Projects"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/translations/{translation_id}": {
+      "get": {
+        "operationId": "getTranslationById",
+        "parameters": [
+          {
+            "name": "translation_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Translation" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Translations"],
+        "security": [{ "bearer": [] }]
+      },
+      "put": {
+        "operationId": "updateTranslationById",
+        "parameters": [
+          {
+            "name": "translation_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTranslationInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Translation" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Translations"],
+        "security": [{ "bearer": [] }]
+      },
+      "delete": {
+        "operationId": "deleteTranslationById",
+        "parameters": [
+          {
+            "name": "translation_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "" },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Translations"],
+        "security": [{ "bearer": [] }]
+      },
+      "patch": {
+        "operationId": "updateTranslationLocale",
+        "parameters": [
+          {
+            "name": "translation_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTranslationLocaleInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Translation" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Translations"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/translations/{translation_id}/ai": {
+      "patch": {
+        "operationId": "translateUsingAi",
+        "parameters": [
+          {
+            "name": "translation_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TranslateAiInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/TranslateAiResult" }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Translations"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/personal-access-tokens": {
+      "get": {
+        "operationId": "getPersonalAccessTokens",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PersonalAccessToken"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Personal access tokens"],
+        "security": [{ "bearer": [] }]
+      },
+      "post": {
+        "operationId": "createPersonalAccessToken",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePersonalAccessTokenInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PersonalAccessToken" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Personal access tokens"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/personal-access-tokens/{key_id}": {
+      "delete": {
+        "operationId": "invalidatePersonalAccessTokenById",
+        "parameters": [
+          {
+            "name": "key_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "" },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Personal access tokens"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/webhooks/project/{project_webhook_id}": {
+      "get": {
+        "operationId": "getProjectWebhookById",
+        "parameters": [
+          {
+            "name": "project_webhook_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProjectWebhook" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "</br>Project webhook not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Webhooks"],
+        "security": [{ "bearer": [] }]
+      },
+      "put": {
+        "operationId": "updateProjectWebhookById",
+        "parameters": [
+          {
+            "name": "project_webhook_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectWebhookInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ProjectWebhook" }
+              }
+            }
+          },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "</br>Project webhook not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Webhooks"],
+        "security": [{ "bearer": [] }]
+      },
+      "delete": {
+        "operationId": "deleteProjectWebhookById",
+        "parameters": [
+          {
+            "name": "project_webhook_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "" },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "</br>Project webhook not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Webhooks"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/auth/login/email": {
+      "put": {
+        "operationId": "loginWithEmail",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/EmailLoginInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthTokens" }
+              }
+            }
+          },
+          "400": {
+            "description": "</br>Password cannot be empty</br>Email cannot be empty</br>Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "</br>No user with that email found</br>User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/auth/register/email": {
+      "post": {
+        "operationId": "registerWithEmail",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/EmailRegisterInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthTokens" }
+              }
+            }
+          },
+          "400": {
+            "description": "</br>Password cannot be empty</br>Email cannot be empty</br>Name field cannot be empty",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "</br>Email already in use",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "refreshAuthTokens",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshAuthTokensInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthTokens" }
+              }
+            }
+          },
+          "400": {
+            "description": "</br>User has been deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "</br>invalid refreshtoken error</br>Unable to find refresh token</br>User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "418": {
+            "description": "</br>Refresh token expired",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/organization-invites/{invite_id}": {
+      "delete": {
+        "operationId": "deleteOrganizationInviteById",
+        "parameters": [
+          {
+            "name": "invite_id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "" },
+          "401": {
+            "description": "</br>Invalid access token</br>Unauthorized Exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": { "type": "string" },
+                    "statusCode": { "type": "number" }
+                  },
+                  "required": ["message", "statusCode"],
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Organization Invites"],
+        "security": [{ "bearer": [] }]
+      }
+    }
+  },
+  "info": {
+    "title": "@i18nhero/web-api",
+    "description": "Api for i18nhero.com",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [{ "url": "https://web.api.i18nhero.com" }],
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "full_name": { "type": "string" },
+          "created_at": { "type": "string" },
+          "modified_at": { "type": "string" },
+          "deleted_at": { "type": "string", "nullable": true }
+        },
+        "required": [
+          "_id",
+          "full_name",
+          "created_at",
+          "modified_at",
+          "deleted_at"
+        ]
+      },
+      "OrganizationUser": {
+        "type": "object",
+        "properties": { "user_id": { "type": "string" } },
+        "required": ["user_id"]
+      },
+      "Organization": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/OrganizationUser" }
+          },
+          "_id": { "type": "string" },
+          "title": { "type": "string" },
+          "allow_ai_translations": { "type": "boolean" },
+          "created_at": { "type": "string" },
+          "modified_at": { "type": "string" },
+          "deleted_at": { "type": "string", "nullable": true }
+        },
+        "required": [
+          "users",
+          "_id",
+          "title",
+          "allow_ai_translations",
+          "created_at",
+          "modified_at",
+          "deleted_at"
+        ]
+      },
+      "CreateOrganizationInput": {
+        "type": "object",
+        "properties": { "title": { "type": "string" } },
+        "required": ["title"]
+      },
+      "UpdateOrganizationInput": {
+        "type": "object",
+        "properties": { "title": { "type": "string" } },
+        "required": ["title"]
+      },
+      "ProjectLocalization": {
+        "type": "object",
+        "properties": {
+          "language_code": { "type": "string" },
+          "country_code": { "type": "string", "nullable": true },
+          "enabled": { "type": "boolean" }
+        },
+        "required": ["language_code", "country_code", "enabled"]
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "localizations": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ProjectLocalization" }
+          },
+          "_id": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "organization_id": { "type": "string" },
+          "is_public": { "type": "boolean" },
+          "auto_translate": { "type": "boolean" },
+          "auto_approve_translations": { "type": "boolean" },
+          "allow_ai_translations": { "type": "boolean" },
+          "created_at": { "type": "string" },
+          "modified_at": { "type": "string" },
+          "deleted_at": { "type": "string", "nullable": true }
+        },
+        "required": [
+          "localizations",
+          "_id",
+          "title",
+          "description",
+          "organization_id",
+          "is_public",
+          "auto_translate",
+          "auto_approve_translations",
+          "allow_ai_translations",
+          "created_at",
+          "modified_at",
+          "deleted_at"
+        ]
+      },
+      "OrganizationMember": {
+        "type": "object",
+        "properties": {
+          "user_id": { "type": "string" },
+          "full_name": { "type": "string" },
+          "email": { "type": "string" },
+          "profile_image_url": { "type": "string" }
+        },
+        "required": ["user_id", "full_name", "email", "profile_image_url"]
+      },
+      "OrganizationInvite": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "email": { "type": "string" },
+          "organization_id": { "type": "string" },
+          "created_at": { "type": "string" },
+          "modified_at": { "type": "string" },
+          "deleted_at": { "type": "string", "nullable": true }
+        },
+        "required": [
+          "_id",
+          "email",
+          "organization_id",
+          "created_at",
+          "modified_at",
+          "deleted_at"
+        ]
+      },
+      "CreateOrganizationInviteInput": {
+        "type": "object",
+        "properties": { "email": { "type": "string" } },
+        "required": ["email"]
+      },
+      "OrganizationProjectOverview": {
+        "type": "object",
+        "properties": {
+          "projects": { "type": "number" },
+          "total_identifiers": { "type": "number" }
+        },
+        "required": ["projects", "total_identifiers"]
+      },
+      "CreateProjectInputLocalization": {
+        "type": "object",
+        "properties": {
+          "language_code": { "type": "string" },
+          "country_code": { "type": "string", "nullable": true },
+          "enabled": { "type": "boolean" }
+        },
+        "required": ["language_code", "country_code", "enabled"]
+      },
+      "CreateProjectInput": {
+        "type": "object",
+        "properties": {
+          "localizations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateProjectInputLocalization"
+            }
+          },
+          "title": { "type": "string" },
+          "organization_id": { "type": "string" },
+          "description": { "type": "string" },
+          "is_public": { "type": "boolean" }
+        },
+        "required": [
+          "localizations",
+          "title",
+          "organization_id",
+          "description",
+          "is_public"
+        ]
+      },
+      "UpdateProjectInputLocalization": {
+        "type": "object",
+        "properties": {
+          "language_code": { "type": "string" },
+          "country_code": { "type": "string", "nullable": true },
+          "enabled": { "type": "boolean" }
+        },
+        "required": ["language_code", "country_code", "enabled"]
+      },
+      "UpdateProjectInput": {
+        "type": "object",
+        "properties": {
+          "localizations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateProjectInputLocalization"
+            }
+          },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "is_public": { "type": "boolean" }
+        },
+        "required": ["localizations", "title", "description", "is_public"]
+      },
+      "Translation": {
+        "type": "object",
+        "properties": {
+          "locales": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "_id": { "type": "string" },
+          "organization_id": { "type": "string" },
+          "project_id": { "type": "string" },
+          "identifier": { "type": "string" },
+          "description": { "type": "string" },
+          "created_at": { "type": "string" },
+          "modified_at": { "type": "string" },
+          "deleted_at": { "type": "string", "nullable": true }
+        },
+        "required": [
+          "locales",
+          "_id",
+          "organization_id",
+          "project_id",
+          "identifier",
+          "description",
+          "created_at",
+          "modified_at",
+          "deleted_at"
+        ]
+      },
+      "ExportProjectOutput": {
+        "type": "object",
+        "properties": {
+          "language_code": { "type": "string" },
+          "country_code": { "type": "string", "nullable": true },
+          "content": { "type": "string" }
+        },
+        "required": ["language_code", "country_code", "content"]
+      },
+      "CreateTranslationInput": {
+        "type": "object",
+        "properties": {
+          "locales": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "identifier": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["locales", "identifier", "description"]
+      },
+      "FileFormat": { "type": "string", "enum": ["json"] },
+      "PushLocaleInputFile": {
+        "type": "object",
+        "properties": {
+          "file_format": { "$ref": "#/components/schemas/FileFormat" },
+          "file_name": { "type": "string" },
+          "content": { "type": "string" }
+        },
+        "required": ["file_format", "file_name", "content"]
+      },
+      "PushLocaleInput": {
+        "type": "object",
+        "properties": {
+          "files": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PushLocaleInputFile" }
+          }
+        },
+        "required": ["files"]
+      },
+      "PushLocaleResult": {
+        "type": "object",
+        "properties": {
+          "inserted": { "type": "number" },
+          "modified": { "type": "number" }
+        },
+        "required": ["inserted", "modified"]
+      },
+      "ProjectWebhookEvent": {
+        "type": "string",
+        "enum": [
+          "key:created",
+          "key:bulk:created",
+          "key:updated",
+          "key:bulk:updated",
+          "key:deleted",
+          "key:bulk:deleted"
+        ]
+      },
+      "ProjectWebhook": {
+        "type": "object",
+        "properties": {
+          "triggers": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ProjectWebhookEvent" }
+          },
+          "_id": { "type": "string" },
+          "organization_id": { "type": "string" },
+          "project_id": { "type": "string" },
+          "description": { "type": "string" },
+          "url": { "type": "string" },
+          "enabled": { "type": "boolean" },
+          "created_at": { "type": "string" },
+          "modified_at": { "type": "string" },
+          "deleted_at": { "type": "string", "nullable": true }
+        },
+        "required": [
+          "triggers",
+          "_id",
+          "organization_id",
+          "project_id",
+          "description",
+          "url",
+          "enabled",
+          "created_at",
+          "modified_at",
+          "deleted_at"
+        ]
+      },
+      "CreateProjectWebhookInput": {
+        "type": "object",
+        "properties": {
+          "triggers": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ProjectWebhookEvent" }
+          },
+          "description": { "type": "string" },
+          "url": { "type": "string" },
+          "enabled": { "type": "boolean" }
+        },
+        "required": ["triggers", "description", "url", "enabled"]
+      },
+      "ProjectMetrics": {
+        "type": "object",
+        "properties": {
+          "locales": {
+            "type": "object",
+            "additionalProperties": { "type": "number" }
+          },
+          "project_id": { "type": "string" },
+          "identifier_count": { "type": "number" }
+        },
+        "required": ["locales", "project_id", "identifier_count"]
+      },
+      "UpdateTranslationInput": {
+        "type": "object",
+        "properties": {
+          "locales": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "identifier": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["locales", "identifier", "description"]
+      },
+      "UpdateTranslationLocaleInput": {
+        "type": "object",
+        "properties": {
+          "locale": { "type": "string" },
+          "value": { "type": "string" }
+        },
+        "required": ["locale", "value"]
+      },
+      "TranslateAiInput": {
+        "type": "object",
+        "properties": { "from": { "type": "string" } },
+        "required": ["from"]
+      },
+      "TranslateAiResult": {
+        "type": "object",
+        "properties": {
+          "locale": { "type": "string" },
+          "translated": { "type": "string" }
+        },
+        "required": ["locale", "translated"]
+      },
+      "PersonalAccessToken": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "secret": { "type": "string" },
+          "user_id": { "type": "string" },
+          "description": { "type": "string" },
+          "created_at": { "type": "string" }
+        },
+        "required": ["_id", "secret", "user_id", "description", "created_at"]
+      },
+      "CreatePersonalAccessTokenInput": {
+        "type": "object",
+        "properties": { "description": { "type": "string" } },
+        "required": ["description"]
+      },
+      "UpdateProjectWebhookInput": {
+        "type": "object",
+        "properties": {
+          "triggers": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ProjectWebhookEvent" }
+          },
+          "description": { "type": "string" },
+          "url": { "type": "string" },
+          "enabled": { "type": "boolean" }
+        },
+        "required": ["triggers", "description", "url", "enabled"]
+      },
+      "EmailLoginInput": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string" },
+          "password": { "type": "string" }
+        },
+        "required": ["email", "password"]
+      },
+      "AuthTokens": {
+        "type": "object",
+        "properties": {
+          "access_token": { "type": "string" },
+          "refresh_token": { "type": "string" }
+        },
+        "required": ["access_token", "refresh_token"]
+      },
+      "EmailRegisterInput": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string" },
+          "password": { "type": "string" },
+          "full_name": { "type": "string" }
+        },
+        "required": ["email", "password", "full_name"]
+      },
+      "RefreshAuthTokensInput": {
+        "type": "object",
+        "properties": { "refresh_token": { "type": "string" } },
+        "required": ["refresh_token"]
+      }
+    }
+  }
+}
