@@ -1,8 +1,10 @@
+use crate::codegen::web_api;
+
 #[derive(Debug)]
 pub enum CliError {
     Io(std::io::Error),
-    PushLocaleHttp(progenitor_client::Error),
-    PullLocaleHttp(progenitor_client::Error),
+    PushLocaleHttp(web_api::apis::Error<web_api::apis::projects_api::PushLocalesToProjectError>),
+    PullLocaleHttp(web_api::apis::Error<web_api::apis::projects_api::PullProjectError>),
     ConfigAlreadyExists,
     MissingProjectId,
     NoConnectedOrganizations,
