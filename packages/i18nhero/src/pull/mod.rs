@@ -1,6 +1,6 @@
 use crate::{
     auth::AuthConfig,
-    codegen::web_api::{self, apis::configuration::Configuration, models::ExportProjectOutput},
+    codegen::web_api::{self, models::ExportProjectOutput},
     commands::pull::PullCommandArguments,
     config::{CliConfig, CliConfigOutputFormat},
     error::CliError,
@@ -14,7 +14,7 @@ async fn fetch_locales(
     host: &str,
     project_id: &str,
 ) -> Result<Vec<ExportProjectOutput>, CliError> {
-    let conf = Configuration {
+    let conf = web_api::apis::configuration::Configuration {
         base_path: host.to_owned(),
         ..Default::default()
     };
