@@ -1,26 +1,23 @@
 use crate::{
     auth::AuthConfig,
+    codegen::web_api::{
+        self,
+        types::{FileFormat, PushLocaleInput, PushLocaleInputFile},
+    },
     commands::push::PushCommandArguments,
     config::{CliConfig, CliConfigOutputFormat},
     error::CliError,
     DEFAULT_WEB_API_HOST,
 };
 
-#[derive(Debug, serde::Serialize)]
-struct PushLocale {
-    file_name: String,
-
-    file_format: String,
-
-    content: String,
-}
-
 #[inline]
 fn read_locales(
     folder: &std::path::Path,
-    file_format: &CliConfigOutputFormat,
-) -> Result<Vec<PushLocale>, CliError> {
-    let expected_file_ext = file_format.to_file_ext();
+    file_format: CliConfigOutputFormat,
+) -> Result<Vec<PushLocaleInputFile>, CliError> {
+    let expected_file_ext = file_format.file_extension();
+
+    let file_format = FileFormat::from(file_format);
 
     let mut locales = Vec::new();
 
@@ -34,9 +31,9 @@ fn read_locales(
             if let Some(stem) = p.file_stem() {
                 let raw = std::fs::read_to_string(&p).map_err(CliError::LocaleRead)?;
 
-                let locale = PushLocale {
+                let locale = PushLocaleInputFile {
                     file_name: stem.to_string_lossy().to_string(),
-                    file_format: expected_file_ext.to_string(),
+                    file_format,
                     content: raw,
                 };
 
@@ -53,40 +50,27 @@ async fn upload_locales(
     api_key: &str,
     host: &str,
     project_id: &str,
-    locales: &[PushLocale],
-) -> Result<(), CliError> {
-    let client = reqwest::Client::new();
-
-    client
-        .put(format!("{host}/projects/{project_id}/push"))
-        .header("x-api-key", api_key)
-        .json(locales)
-        .send()
+    locales: Vec<PushLocaleInputFile>,
+) -> Result<progenitor_client::ResponseValue<web_api::types::PushLocaleResult>, CliError> {
+    web_api::Client::new(host)
+        .push_locales_to_project(project_id, api_key, &PushLocaleInput { files: locales })
         .await
-        .map_err(CliError::PushLocaleHttp)?
-        .error_for_status()
-        .map_err(CliError::PushLocaleHttp)?;
-
-    Ok(())
+        .map_err(CliError::PushLocaleHttp)
 }
 
 #[inline]
 pub async fn run(arguments: &PushCommandArguments, config: &CliConfig) -> Result<(), CliError> {
-    let locales = read_locales(&config.output.path, &config.output.format)?;
+    let locales = read_locales(&config.output.path, config.output.format)?;
+
+    let web_api_host = arguments
+        .web_api_host
+        .as_ref()
+        .map_or(DEFAULT_WEB_API_HOST, |host| host);
 
     if !locales.is_empty() {
         let auth = AuthConfig::load()?;
 
-        upload_locales(
-            &auth.api_key,
-            arguments
-                .api_host
-                .as_ref()
-                .map_or(DEFAULT_WEB_API_HOST, |api_host| api_host),
-            &config.project_id,
-            &locales,
-        )
-        .await?;
+        upload_locales(&auth.api_key, web_api_host, &config.project_id, locales).await?;
     }
 
     Ok(())

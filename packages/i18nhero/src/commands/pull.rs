@@ -3,5 +3,5 @@ use clap::Args;
 #[derive(Args, Debug)]
 pub struct PullCommandArguments {
     #[arg(long, hide = true)]
-    pub api_host: Option<String>,
+    pub web_api_host: Option<String>,
 }
