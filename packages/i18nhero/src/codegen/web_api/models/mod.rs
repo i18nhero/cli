@@ -34,6 +34,8 @@ pub mod organization_project_overview;
 pub use self::organization_project_overview::OrganizationProjectOverview;
 pub mod organization_user;
 pub use self::organization_user::OrganizationUser;
+pub mod partial_export_project_config_input;
+pub use self::partial_export_project_config_input::PartialExportProjectConfigInput;
 pub mod personal_access_token;
 pub use self::personal_access_token::PersonalAccessToken;
 pub mod project;

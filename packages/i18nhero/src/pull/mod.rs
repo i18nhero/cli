@@ -1,6 +1,9 @@
 use crate::{
     auth::AuthConfig,
-    codegen::web_api::{self, models::ExportProjectOutput},
+    codegen::web_api::{
+        self,
+        models::{ExportProjectOutput, FileFormat, PartialExportProjectConfigInput},
+    },
     commands::pull::PullCommandArguments,
     config::{CliConfig, CliConfigOutputFormat},
     error::CliError,
@@ -10,6 +13,7 @@ use crate::{
 
 #[inline]
 async fn fetch_locales(
+    config: &CliConfig,
     api_key: &str,
     host: &str,
     project_id: &str,
@@ -19,7 +23,13 @@ async fn fetch_locales(
         ..Default::default()
     };
 
-    web_api::apis::projects_api::pull_project(&conf, project_id, api_key, "false")
+    let body = PartialExportProjectConfigInput {
+        format: Some(FileFormat::from(config.output.format)),
+        flat: config.output.flat,
+        keep_empty_fields: config.output.keep_empty_fields,
+    };
+
+    web_api::apis::projects_api::pull_project(&conf, project_id, api_key, body)
         .await
         .map_err(CliError::PullLocaleHttp)
 }
@@ -78,7 +88,7 @@ pub async fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result
         .as_ref()
         .map_or(DEFAULT_WEB_API_HOST, |host| host);
 
-    let locales = fetch_locales(&auth.api_key, web_api_host, &config.project_id).await?;
+    let locales = fetch_locales(config, &auth.api_key, web_api_host, &config.project_id).await?;
 
     save_locales(config, locales).await
 }

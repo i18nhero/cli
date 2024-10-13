@@ -37,6 +37,14 @@ pub enum CreateTranslationError {
     UnknownValue(serde_json::Value),
 }
 
+/// struct for typed errors of method [`download_project`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum DownloadProjectError {
+    Status401(models::GetUserById401Response),
+    UnknownValue(serde_json::Value),
+}
+
 /// struct for typed errors of method [`get_project_by_id`]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -214,6 +222,52 @@ pub async fn create_translation(
         serde_json::from_str(&local_var_content).map_err(Error::from)
     } else {
         let local_var_entity: Option<CreateTranslationError> =
+            serde_json::from_str(&local_var_content).ok();
+        let local_var_error = ResponseContent {
+            status: local_var_status,
+            content: local_var_content,
+            entity: local_var_entity,
+        };
+        Err(Error::ResponseError(local_var_error))
+    }
+}
+
+pub async fn download_project(
+    configuration: &configuration::Configuration,
+    project_id: &str,
+    authorization: &str,
+    partial_export_project_config_input: models::PartialExportProjectConfigInput,
+) -> Result<Vec<models::ExportProjectOutput>, Error<DownloadProjectError>> {
+    let local_var_configuration = configuration;
+
+    let local_var_client = &local_var_configuration.client;
+
+    let local_var_uri_str = format!(
+        "{}/projects/{project_id}/download",
+        local_var_configuration.base_path,
+        project_id = crate::codegen::web_api::apis::urlencode(project_id)
+    );
+    let mut local_var_req_builder =
+        local_var_client.request(reqwest::Method::PUT, local_var_uri_str.as_str());
+
+    if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+        local_var_req_builder =
+            local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+    }
+    local_var_req_builder =
+        local_var_req_builder.header("authorization", authorization.to_string());
+    local_var_req_builder = local_var_req_builder.json(&partial_export_project_config_input);
+
+    let local_var_req = local_var_req_builder.build()?;
+    let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+    let local_var_status = local_var_resp.status();
+    let local_var_content = local_var_resp.text().await?;
+
+    if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+        serde_json::from_str(&local_var_content).map_err(Error::from)
+    } else {
+        let local_var_entity: Option<DownloadProjectError> =
             serde_json::from_str(&local_var_content).ok();
         let local_var_error = ResponseContent {
             status: local_var_status,
@@ -404,7 +458,7 @@ pub async fn pull_project(
     configuration: &configuration::Configuration,
     project_id: &str,
     x_api_key: &str,
-    flat: &str,
+    partial_export_project_config_input: models::PartialExportProjectConfigInput,
 ) -> Result<Vec<models::ExportProjectOutput>, Error<PullProjectError>> {
     let local_var_configuration = configuration;
 
@@ -416,14 +470,14 @@ pub async fn pull_project(
         project_id = crate::codegen::web_api::apis::urlencode(project_id)
     );
     let mut local_var_req_builder =
-        local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
+        local_var_client.request(reqwest::Method::PUT, local_var_uri_str.as_str());
 
-    local_var_req_builder = local_var_req_builder.query(&[("flat", &flat.to_string())]);
     if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
         local_var_req_builder =
             local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
     }
     local_var_req_builder = local_var_req_builder.header("x-api-key", x_api_key.to_string());
+    local_var_req_builder = local_var_req_builder.json(&partial_export_project_config_input);
 
     let local_var_req = local_var_req_builder.build()?;
     let local_var_resp = local_var_client.execute(local_var_req).await?;
