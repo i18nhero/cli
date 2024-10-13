@@ -1,10 +1,16 @@
-use crate::codegen::web_api;
+use crate::codegen;
 
 #[derive(Debug)]
 pub enum CliError {
     Io(std::io::Error),
-    PushLocaleHttp(web_api::apis::Error<web_api::apis::projects_api::PushLocalesToProjectError>),
-    PullLocaleHttp(web_api::apis::Error<web_api::apis::projects_api::PullProjectError>),
+    PushLocaleHttp(
+        codegen::web_api::apis::Error<
+            codegen::web_api::apis::projects_api::PushLocalesToProjectError,
+        >,
+    ),
+    PullLocaleHttp(
+        codegen::web_api::apis::Error<codegen::web_api::apis::projects_api::PullProjectError>,
+    ),
     ConfigAlreadyExists,
     MissingProjectId,
     NoConnectedOrganizations,
@@ -20,8 +26,14 @@ pub enum CliError {
     AuthConfigDeserialize(serde_json::Error),
     AuthConfigSave(std::io::Error),
     AuthConfigLoad(std::io::Error),
-    GetOrganizations(reqwest::Error),
-    GetOrganizationProjects(reqwest::Error),
+    GetOrganizations(
+        codegen::cli_api::apis::Error<codegen::cli_api::apis::default_api::GetOrganizationsError>,
+    ),
+    GetOrganizationProjects(
+        codegen::cli_api::apis::Error<
+            codegen::cli_api::apis::default_api::GetOrganizationProjectsError,
+        >,
+    ),
 }
 
 impl std::error::Error for CliError {}
