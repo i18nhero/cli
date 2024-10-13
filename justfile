@@ -38,7 +38,7 @@ changelog:
 
 generate-web-api:
     rm -rf web_api
-    npx @openapitools/openapi-generator-cli generate -g rust -o web_api -i https://web.api.i18nhero.com/docs-json --global-property=modelDocs=false,apiDocs=false
+    npx @openapitools/openapi-generator-cli generate -g rust -o web_api -i http://localhost:5000/docs-json --global-property=modelDocs=false,apiDocs=false
     find ./web_api -type f -exec sed -i 's/crate::/crate::codegen::web_api::/g' {} \;
     mkdir -p packages/i18nhero/src/codegen/web_api
     rm -rf packages/i18nhero/src/codegen/web_api

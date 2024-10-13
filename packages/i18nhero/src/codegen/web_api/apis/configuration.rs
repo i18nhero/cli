@@ -36,7 +36,7 @@ impl Configuration {
 impl Default for Configuration {
     fn default() -> Self {
         Configuration {
-            base_path: "https://web.api.i18nhero.com".to_owned(),
+            base_path: "http://localhost:5000".to_owned(),
             user_agent: Some("OpenAPI-Generator/1.0.0/rust".to_owned()),
             client: reqwest::Client::new(),
             basic_auth: None,
