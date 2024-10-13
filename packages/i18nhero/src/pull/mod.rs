@@ -1,6 +1,6 @@
 use crate::{
     auth::AuthConfig,
-    codegen::{self, web_api::types::ExportProjectOutput},
+    codegen::web_api::{self, apis::configuration::Configuration, models::ExportProjectOutput},
     commands::pull::PullCommandArguments,
     config::{CliConfig, CliConfigOutputFormat},
     error::CliError,
@@ -13,9 +13,13 @@ async fn fetch_locales(
     api_key: &str,
     host: &str,
     project_id: &str,
-) -> Result<progenitor_client::ResponseValue<Vec<ExportProjectOutput>>, CliError> {
-    codegen::web_api::Client::new(host)
-        .pull_project(project_id, "false", api_key)
+) -> Result<Vec<ExportProjectOutput>, CliError> {
+    let conf = Configuration {
+        base_path: host.to_owned(),
+        ..Default::default()
+    };
+
+    web_api::apis::projects_api::pull_project(&conf, project_id, api_key, "false")
         .await
         .map_err(CliError::PullLocaleHttp)
 }
@@ -76,5 +80,5 @@ pub async fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result
 
     let locales = fetch_locales(&auth.api_key, web_api_host, &config.project_id).await?;
 
-    save_locales(config, locales.into_inner()).await
+    save_locales(config, locales).await
 }

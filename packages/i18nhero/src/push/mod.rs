@@ -2,7 +2,7 @@ use crate::{
     auth::AuthConfig,
     codegen::web_api::{
         self,
-        types::{FileFormat, PushLocaleInput, PushLocaleInputFile},
+        models::{FileFormat, PushLocaleInput, PushLocaleInputFile},
     },
     commands::push::PushCommandArguments,
     config::{CliConfig, CliConfigOutputFormat},
@@ -51,11 +51,20 @@ async fn upload_locales(
     host: &str,
     project_id: &str,
     locales: Vec<PushLocaleInputFile>,
-) -> Result<progenitor_client::ResponseValue<web_api::types::PushLocaleResult>, CliError> {
-    web_api::Client::new(host)
-        .push_locales_to_project(project_id, api_key, &PushLocaleInput { files: locales })
-        .await
-        .map_err(CliError::PushLocaleHttp)
+) -> Result<web_api::models::PushLocaleResult, CliError> {
+    let conf = web_api::apis::configuration::Configuration {
+        base_path: host.to_owned(),
+        ..Default::default()
+    };
+
+    web_api::apis::projects_api::push_locales_to_project(
+        &conf,
+        project_id,
+        api_key,
+        PushLocaleInput { files: locales },
+    )
+    .await
+    .map_err(CliError::PushLocaleHttp)
 }
 
 #[inline]
