@@ -1,13 +1,15 @@
 use crate::{
     auth::AuthConfig,
-    codegen::web_api::{
-        self,
-        models::{FileFormat, PushLocaleInput, PushLocaleInputFile},
+    codegen::{
+        setup_web_api_configuration,
+        web_api::{
+            self,
+            models::{FileFormat, PushLocaleInput, PushLocaleInputFile},
+        },
     },
     commands::push::PushCommandArguments,
     config::{CliConfig, CliConfigOutputFormat},
     error::CliError,
-    DEFAULT_WEB_API_HOST,
 };
 
 #[inline]
@@ -47,18 +49,13 @@ fn read_locales(
 
 #[inline]
 async fn upload_locales(
+    web_api_config: &web_api::apis::configuration::Configuration,
     api_key: &str,
-    host: &str,
     project_id: &str,
     locales: Vec<PushLocaleInputFile>,
 ) -> Result<web_api::models::PushLocaleResult, CliError> {
-    let conf = web_api::apis::configuration::Configuration {
-        base_path: host.to_owned(),
-        ..Default::default()
-    };
-
     web_api::apis::projects_api::push_locales_to_project(
-        &conf,
+        web_api_config,
         project_id,
         api_key,
         PushLocaleInput { files: locales },
@@ -71,15 +68,12 @@ async fn upload_locales(
 pub async fn run(arguments: &PushCommandArguments, config: &CliConfig) -> Result<(), CliError> {
     let locales = read_locales(&config.output.path, config.output.format)?;
 
-    let web_api_host = arguments
-        .web_api_host
-        .as_ref()
-        .map_or(DEFAULT_WEB_API_HOST, |host| host);
+    let web_api_config = setup_web_api_configuration(arguments.web_api_host.clone());
 
     if !locales.is_empty() {
         let auth = AuthConfig::load()?;
 
-        upload_locales(&auth.api_key, web_api_host, &config.project_id, locales).await?;
+        upload_locales(&web_api_config, &auth.api_key, &config.project_id, locales).await?;
     }
 
     Ok(())
