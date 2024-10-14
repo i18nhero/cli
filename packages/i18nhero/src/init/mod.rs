@@ -2,12 +2,11 @@ use dialoguer::{theme::ColorfulTheme, Select};
 
 use crate::{
     auth::AuthConfig,
-    codegen,
+    codegen::{self, setup_cli_api_configuration},
     commands::init::InitCommandArguments,
     config::{CliConfig, CONFIG_PATH},
     error::CliError,
     terminal::print_configuration_file_created,
-    DEFAULT_CLI_API_HOST,
 };
 
 #[inline]
@@ -75,15 +74,7 @@ pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
 
     let auth = AuthConfig::load()?;
 
-    let cli_api_host = arguments
-        .cli_api_host
-        .as_ref()
-        .map_or(DEFAULT_CLI_API_HOST, |host| host);
-
-    let cli_api_config = codegen::cli_api::apis::configuration::Configuration {
-        base_path: cli_api_host.to_owned(),
-        ..Default::default()
-    };
+    let cli_api_config = setup_cli_api_configuration(arguments.cli_api_host.clone());
 
     let organizations = get_organizations(&cli_api_config, &auth.api_key).await?;
 

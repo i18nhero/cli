@@ -16,12 +16,15 @@ use serde::{Deserialize, Serialize};
 pub enum FileFormat {
     #[serde(rename = "json")]
     Json,
+    #[serde(rename = "yaml")]
+    Yaml,
 }
 
 impl std::fmt::Display for FileFormat {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
             Self::Json => write!(f, "json"),
+            Self::Yaml => write!(f, "yaml"),
         }
     }
 }

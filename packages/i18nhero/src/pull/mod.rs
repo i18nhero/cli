@@ -1,35 +1,32 @@
 use crate::{
     auth::AuthConfig,
-    codegen::web_api::{
-        self,
-        models::{ExportProjectOutput, FileFormat, PartialExportProjectConfigInput},
+    codegen::{
+        setup_web_api_configuration,
+        web_api::{
+            self,
+            models::{ExportProjectOutput, FileFormat, PartialExportProjectConfigInput},
+        },
     },
     commands::pull::PullCommandArguments,
-    config::{CliConfig, CliConfigOutputFormat},
+    config::{CliConfig, CliConfigOutput, CliConfigOutputFormat},
     error::CliError,
     terminal::print_saving_file,
-    DEFAULT_WEB_API_HOST,
 };
 
 #[inline]
 async fn fetch_locales(
-    config: &CliConfig,
+    web_api_config: &web_api::apis::configuration::Configuration,
     api_key: &str,
-    host: &str,
     project_id: &str,
+    flags: &CliConfigOutput,
 ) -> Result<Vec<ExportProjectOutput>, CliError> {
-    let conf = web_api::apis::configuration::Configuration {
-        base_path: host.to_owned(),
-        ..Default::default()
-    };
-
     let body = PartialExportProjectConfigInput {
-        format: Some(FileFormat::from(config.output.format)),
-        flat: config.output.flat,
-        keep_empty_fields: config.output.keep_empty_fields,
+        format: Some(FileFormat::from(flags.format)),
+        flat: flags.flat,
+        keep_empty_fields: flags.keep_empty_fields,
     };
 
-    web_api::apis::projects_api::pull_project(&conf, project_id, api_key, body)
+    web_api::apis::projects_api::pull_project(web_api_config, project_id, api_key, body)
         .await
         .map_err(CliError::PullLocaleHttp)
 }
@@ -83,12 +80,15 @@ pub async fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result
 
     let auth = AuthConfig::load()?;
 
-    let web_api_host = arguments
-        .web_api_host
-        .as_ref()
-        .map_or(DEFAULT_WEB_API_HOST, |host| host);
+    let web_api_config = setup_web_api_configuration(arguments.web_api_host.clone());
 
-    let locales = fetch_locales(config, &auth.api_key, web_api_host, &config.project_id).await?;
+    let locales = fetch_locales(
+        &web_api_config,
+        &auth.api_key,
+        &config.project_id,
+        &config.output,
+    )
+    .await?;
 
     save_locales(config, locales).await
 }

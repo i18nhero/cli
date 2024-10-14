@@ -14,10 +14,6 @@ mod pull;
 mod push;
 mod terminal;
 
-pub const DEFAULT_CLI_API_HOST: &str = "https://cli.api.i18nhero.com";
-
-pub const DEFAULT_WEB_API_HOST: &str = "https://web.api.i18nhero.com";
-
 #[inline]
 async fn _main() -> Result<(), CliError> {
     match Cli::parse().command {
