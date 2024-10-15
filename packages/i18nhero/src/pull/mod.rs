@@ -10,7 +10,7 @@ use crate::{
     commands::pull::PullCommandArguments,
     config::{CliConfig, CliConfigOutput, CliConfigOutputFormat},
     error::CliError,
-    terminal::print_saving_file,
+    terminal::print_pulling_file,
 };
 
 #[inline]
@@ -50,7 +50,7 @@ async fn save_locales(
     config: &CliConfig,
     locales: Vec<ExportProjectOutput>,
 ) -> Result<(), CliError> {
-    let _ = std::fs::create_dir_all(&config.output.path);
+    let _ = config.create_locale_directory();
 
     for locale in locales {
         let file_name = locale_file_name(
@@ -59,7 +59,7 @@ async fn save_locales(
             config.output.format,
         );
 
-        print_saving_file(&file_name);
+        print_pulling_file(&file_name);
 
         tokio::fs::write(
             config.output.path.join(file_name),
@@ -72,12 +72,61 @@ async fn save_locales(
     Ok(())
 }
 
+fn check_if_dirty_repository(path: &std::path::Path) -> Result<(), CliError> {
+    let locale_dir = path.canonicalize().map_err(CliError::Io)?;
+
+    if let Ok(repo) = git2::Repository::discover(path) {
+        let mut repo_opts = git2::StatusOptions::new();
+        repo_opts.include_ignored(false);
+        repo_opts.include_untracked(true);
+
+        let mut dirty_files = Vec::new();
+
+        for status in repo
+            .statuses(Some(&mut repo_opts))
+            .map_err(CliError::GenericGit)?
+            .iter()
+        {
+            if let Some(path) = status.path().map(std::path::PathBuf::from) {
+                match status.status() {
+                    git2::Status::CURRENT => (),
+                    git2::Status::INDEX_NEW
+                    | git2::Status::INDEX_MODIFIED
+                    | git2::Status::INDEX_DELETED
+                    | git2::Status::INDEX_RENAMED
+                    | git2::Status::INDEX_TYPECHANGE => continue,
+                    _ => {
+                        if path
+                            .canonicalize()
+                            .map_err(CliError::Io)?
+                            .starts_with(&locale_dir)
+                        {
+                            dirty_files.push(path);
+                        }
+                    }
+                };
+            }
+        }
+
+        if !dirty_files.is_empty() {
+            return Err(CliError::PullDirtyRepository(dirty_files));
+        }
+    }
+
+    Ok(())
+}
+
 #[inline]
 pub async fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result<(), CliError> {
     if config.project_id.is_empty() {
         return Err(CliError::MissingProjectId);
     }
 
+    let _ = config.create_locale_directory();
+
+    if !arguments.allow_dirty {
+        check_if_dirty_repository(&config.output.path)?;
+    }
     let auth = AuthConfig::load()?;
 
     let web_api_config = setup_web_api_configuration(arguments.web_api_host.clone());

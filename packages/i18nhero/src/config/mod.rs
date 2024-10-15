@@ -126,6 +126,11 @@ impl CliConfig {
             "https://raw.githubusercontent.com/i18nhero/cli/main/schemas/v{package_version}/i18nhero.schema.json"
         )
     }
+
+    #[inline]
+    pub fn create_locale_directory(&self) -> Result<(), std::io::Error> {
+        std::fs::create_dir_all(&self.output.path)
+    }
 }
 
 #[cfg(test)]

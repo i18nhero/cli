@@ -22,6 +22,7 @@ clap_complete = "4.5.29"
 console = { version = "0.15.8" }
 dialoguer = { version = "0.11.0" }
 dirs = { version = "5.0.1" }
+git2 = { version = "0.19.0", features = ["vendored-libgit2"] }
 reqwest = { version = "0.12.8", default-features = false, features = [
   "brotli",
   "charset",

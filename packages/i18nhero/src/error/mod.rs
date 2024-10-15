@@ -34,6 +34,10 @@ pub enum CliError {
             codegen::cli_api::apis::default_api::GetOrganizationProjectsError,
         >,
     ),
+
+    PullDirtyRepository(Vec<std::path::PathBuf>),
+
+    GenericGit(git2::Error),
 }
 
 impl std::error::Error for CliError {}
@@ -68,6 +72,17 @@ impl core::fmt::Display for CliError {
             Self::PullLocaleHttp(e) => write!(f, "Error pulling locales - {e}"),
             Self::LocaleSave(e) => write!(f, "Error saving locale - {e}"),
             Self::LocaleRead(e) => write!(f, "Error reading locales - {e}"),
+
+            Self::PullDirtyRepository(files) => {
+                let pretty_files = files
+                    .iter()
+                    .map(|p| format!("  - {}", p.display()))
+                    .collect::<Vec<_>>()
+                    .join("\n");
+
+                write!(f, "Directory has unstaged changes. Use `--allow-dirty` to suppress this error, or stage the following files:\n\n{pretty_files}")
+            }
+            Self::GenericGit(e) => write!(f, "Error with git - {e}"),
         }
     }
 }
