@@ -18,10 +18,33 @@ pub fn print_configuration_file_created() {
 }
 
 #[inline]
-pub fn print_saving_file(file_name: &str) {
+pub fn print_pulling_file(file_name: &str) {
     println!(
         "{}",
-        console::style(format!("Saving {file_name}")).green().bold()
+        console::style(format!("Pulling {file_name}"))
+            .green()
+            .bold()
+    );
+}
+
+#[inline]
+pub fn print_no_locales_to_push() {
+    println!(
+        "{}",
+        console::style("Locale directory is empty").yellow().bold()
+    );
+}
+
+#[inline]
+pub fn print_pushed_locales(locale_count: usize) {
+    println!(
+        "{}",
+        console::style(format!(
+            "Pushed {locale_count} locale{}",
+            if locale_count == 1 { "" } else { "s" }
+        ))
+        .green()
+        .bold()
     );
 }
 

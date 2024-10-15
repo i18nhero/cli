@@ -10,6 +10,7 @@ use crate::{
     commands::push::PushCommandArguments,
     config::{CliConfig, CliConfigOutputFormat},
     error::CliError,
+    terminal::{print_no_locales_to_push, print_pushed_locales},
 };
 
 #[inline]
@@ -22,9 +23,6 @@ fn read_locales(
     let file_format = FileFormat::from(file_format);
 
     let mut locales = Vec::new();
-
-    // TODO: log warning?
-    let _ = std::fs::create_dir_all(folder);
 
     for entry in (std::fs::read_dir(folder).map_err(CliError::LocaleRead)?).flatten() {
         let p = entry.path();
@@ -66,14 +64,23 @@ async fn upload_locales(
 
 #[inline]
 pub async fn run(arguments: &PushCommandArguments, config: &CliConfig) -> Result<(), CliError> {
+    let _ = config.create_locale_directory();
+
     let locales = read_locales(&config.output.path, config.output.format)?;
 
     let web_api_config = setup_web_api_configuration(arguments.web_api_host.clone());
 
-    if !locales.is_empty() {
+    if locales.is_empty() {
+        // TODO: convert to error?
+        print_no_locales_to_push();
+    } else {
         let auth = AuthConfig::load()?;
 
+        let locale_count = locales.len();
+
         upload_locales(&web_api_config, &auth.api_key, &config.project_id, locales).await?;
+
+        print_pushed_locales(locale_count);
     }
 
     Ok(())

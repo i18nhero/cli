@@ -29,6 +29,7 @@ clap_complete.workspace = true
 console.workspace = true
 dialoguer.workspace = true
 dirs.workspace = true
+git2.workspace = true
 reqwest.workspace = true
 schemars = { workspace = true, optional = true }
 serde.workspace = true

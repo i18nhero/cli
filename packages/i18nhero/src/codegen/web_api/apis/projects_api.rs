@@ -237,7 +237,7 @@ pub async fn download_project(
     project_id: &str,
     authorization: &str,
     partial_export_project_config_input: models::PartialExportProjectConfigInput,
-) -> Result<Vec<models::ExportProjectOutput>, Error<DownloadProjectError>> {
+) -> Result<std::path::PathBuf, Error<DownloadProjectError>> {
     let local_var_configuration = configuration;
 
     let local_var_client = &local_var_configuration.client;
