@@ -7,12 +7,16 @@ build-local:
     just build
     sudo cp target/release/i18nhero /usr/local/bin/i18nhero-local
 
+dist:
+    cargo dist init --yes
+
 format:
     just --fmt --unstable .
     stylua .
     mdsf format .
     npx prettier --write --cache --ignore-unknown .
     cargo fmt
+    just dist
 
 lint:
     cargo fmt -- --check --color always
@@ -63,9 +67,49 @@ precommit:
     just generate-web-api
     just changelog
     cargo clean
-    cargo dist init --yes
+    just dist
     just format
     just build
     just lint
     just test
     typos --exclude CHANGELOG.md .
+
+cross-target-install TARGET:
+    rustup target add {{ TARGET }}
+
+cross-target-build TARGET:
+    cross build --target {{ TARGET }}
+
+cross-target-lint TARGET:
+    cross clippy --target {{ TARGET }}
+
+cross-target-test TARGET:
+    cross test --target {{ TARGET }}
+
+cross-target-validate TARGET:
+    just cross-target-install {{ TARGET }}
+    just cross-target-build {{ TARGET }}
+    just cross-target-lint {{ TARGET }}
+    just cross-target-test {{ TARGET }}
+
+cross-linux:
+    just cross-target-validate x86_64-unknown-linux-gnu
+    just cross-target-validate x86_64-unknown-linux-musl
+
+    just cross-target-validate aarch64-unknown-linux-gnu
+    just cross-target-validate aarch64-unknown-linux-musl
+
+cross-windows:
+    # Cross does not provide a Dockerfile for Windows
+    # just cross-target-validate x86_64-pc-windows-msvc
+
+cross-macos:
+    # Cross does not provide a Dockerfile for MacOS
+    # just cross-target-validate aarch64-apple-darwin
+    # just cross-target-validate x86_64-apple-darwin
+
+# the purpose of this is to check whether packages can be built without external dependencies
+cross-all:
+    just cross-linux
+    just cross-windows
+    just cross-macos
