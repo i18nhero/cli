@@ -2,44 +2,55 @@ import subprocess
 import re
 
 
+def build():
+    subprocess.run(["cargo", "build"]).check_returncode()
+
+
 def get_help_output(name: str) -> str:
-    cmd = subprocess.run(["i18nhero-local", name, "--help"])
+    args = ["./target/debug/i18nhero"]
+
+    if len(name):
+        args.append(name)
+
+    args.append("--help")
+
+    cmd = subprocess.run(args, stdout=subprocess.PIPE)
 
     cmd.check_returncode()
 
-    return str(cmd.stdout)
-
-
-def get_readme() -> str:
-    pass
+    return cmd.stdout.decode("utf-8")
 
 
 def update_readme(readme: str, command: str, help: str) -> str:
     section = f"{"base" if len(command) == 0 else command}-command-help"
 
     return re.sub(
-        f"(<!-- START_SECTION:{section} -->)[^{{}}]*<!-- END_SECTION:{section} -->",
-        f"<!-- START_SECTION:{section} -->\n\n{help}\n\n<!-- END_SECTION:{section} -->",
-        readme,
+        pattern=f"(<!-- START_SECTION:{section} -->)[^{{}}]*?<!-- END_SECTION:{section} -->",
+        repl=f"<!-- START_SECTION:{section} -->\n\n```\n{help}\n```\n\n<!-- END_SECTION:{section} -->",
+        string=readme,
         flags=re.RegexFlag.MULTILINE,
     )
 
 
-COMMANDS = [
-    # base
-    "",
-    "init",
-    "push",
-    "pull",
-    "login",
-    "logout",
-    "completions",
-]
-
 if __name__ == "__main__":
-    readme = get_readme()
+    COMMANDS = [
+        # base
+        "",
+        "init",
+        "push",
+        "pull",
+        "login",
+        "logout",
+        "completions",
+    ]
+
+    build()
+
+    file = open("README.md", "r").read()
 
     for command in COMMANDS:
         output = get_help_output(command)
 
-        readme = update_readme(readme, command, output)
+        file = update_readme(file, command, output)
+
+    open("README.md", "w").write(file)
