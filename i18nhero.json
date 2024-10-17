@@ -1,9 +1,0 @@
-{
-  "$schema": "https://raw.githubusercontent.com/i18nhero/cli/main/schemas/v0.0.0/i18nhero.schema.json",
-  "project_id": "66da3bc6de9d3506120c0a87",
-  "output": {
-    "path": "lang",
-    "format": "json",
-    "save_missing_values": false
-  }
-}

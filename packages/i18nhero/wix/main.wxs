@@ -69,7 +69,7 @@
 
         <Package Id='*'
             Keywords='Installer'
-            Description='CLI tool for i18nhero'
+            Description='CLI tool for interacting with locales hosted on i18nhero.com'
             Manufacturer='Mads Hougesen'
             InstallerVersion='450'
             Languages='1033'
