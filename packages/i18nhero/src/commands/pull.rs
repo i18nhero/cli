@@ -8,6 +8,10 @@ pub struct PullCommandArguments {
     #[arg(long, default_value_t = false)]
     pub allow_dirty: bool,
 
+    /// Use for authentication instead of global auth config.
+    #[arg(long)]
+    pub api_key: Option<String>,
+
     #[arg(long, hide = true)]
     pub web_api_host: Option<String>,
 }

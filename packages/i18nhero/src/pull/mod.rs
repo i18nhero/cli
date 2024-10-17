@@ -127,17 +127,16 @@ pub async fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result
     if !arguments.allow_dirty {
         check_if_dirty_repository(&config.output.path)?;
     }
-    let auth = AuthConfig::load()?;
+
+    let auth = if let Some(api_key) = &arguments.api_key {
+        api_key.to_owned()
+    } else {
+        AuthConfig::load()?.api_key
+    };
 
     let web_api_config = setup_web_api_configuration(arguments.web_api_host.clone());
 
-    let locales = fetch_locales(
-        &web_api_config,
-        &auth.api_key,
-        &config.project_id,
-        &config.output,
-    )
-    .await?;
+    let locales = fetch_locales(&web_api_config, &auth, &config.project_id, &config.output).await?;
 
     save_locales(config, locales).await
 }

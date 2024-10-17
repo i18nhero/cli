@@ -74,11 +74,15 @@ pub async fn run(arguments: &PushCommandArguments, config: &CliConfig) -> Result
         // TODO: convert to error?
         print_no_locales_to_push();
     } else {
-        let auth = AuthConfig::load()?;
+        let auth = if let Some(api_key) = &arguments.api_key {
+            api_key.to_owned()
+        } else {
+            AuthConfig::load()?.api_key
+        };
 
         let locale_count = locales.len();
 
-        upload_locales(&web_api_config, &auth.api_key, &config.project_id, locales).await?;
+        upload_locales(&web_api_config, &auth, &config.project_id, locales).await?;
 
         print_pushed_locales(locale_count);
     }

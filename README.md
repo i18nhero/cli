@@ -276,6 +276,9 @@ Options:
 
           Currently only applicable for projects that use git.
 
+      --api-key <API_KEY>
+          Use for authentication instead of global auth config
+
   -h, --help
           Print help (see a summary with '-h')
 
@@ -295,11 +298,12 @@ The `push` command is used for pushing (uploading) locales to [i18nhero.com](htt
 ```
 Upload locale files to i18nhero
 
-Usage: i18nhero push
+Usage: i18nhero push [OPTIONS]
 
 Options:
-  -h, --help     Print help
-  -V, --version  Print version
+      --api-key <API_KEY>  Use for authentication instead of global auth config
+  -h, --help               Print help
+  -V, --version            Print version
 
 ```
 
