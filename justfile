@@ -51,6 +51,9 @@ generate-web-api:
     rm -rf web_api
     cargo fmt
 
+update-help:
+    python3 scripts/update-readme-help.py
+
 generate-cli-api:
     rm -rf cli_api
     npx @openapitools/openapi-generator-cli generate -g rust -o cli_api -i https://cli.api.i18nhero.com/spec --global-property=modelDocs=false,apiDocs=false
@@ -68,8 +71,9 @@ precommit:
     just changelog
     cargo clean
     just dist
-    just format
     just build
+    just update-help
+    just format
     just lint
     just test
     typos --exclude CHANGELOG.md .

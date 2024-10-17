@@ -39,15 +39,34 @@ impl From<CliConfigOutputFormat> for FileFormat {
 #[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
 #[cfg_attr(test, derive(Debug, PartialEq, Eq))]
 pub struct CliConfigOutput {
+    /// Defines where locale files should be downloaded to, and uploaded from.
     #[serde(default = "CliConfigOutput::default_path")]
     pub path: std::path::PathBuf,
 
+    /// Defines the file format used when uploading and downloading locale files.
     #[serde(default = "CliConfigOutputFormat::default")]
     pub format: CliConfigOutputFormat,
 
+    /// Defines whether identifiers that are missing translations should be downloaded.
     #[serde(default)]
     pub keep_empty_fields: Option<bool>,
 
+    /// Defines whether the locale files should be a flat `string <-> string` map or a multi layered map.
+    ///
+    /// A point (`.`) in the identifier name is used to define multi-layered keys when `flat` is set to false.
+    ///
+    /// The identifier `pages.dashboard.title` will be expanded to the following:
+    ///
+    /// ```json
+    /// {
+    ///   "pages": {
+    ///     "dashboard": {
+    ///       "title": ""
+    ///     }
+    ///   }
+    /// }
+    /// ```
+    ///
     #[serde(default)]
     pub flat: Option<bool>,
 }
@@ -78,8 +97,10 @@ pub struct CliConfig {
     #[serde(rename = "$schema", default = "CliConfig::default_schema_location")]
     pub schema: String,
 
+    /// Used to define the linked project.
     pub project_id: String,
 
+    /// Configuration for downloading and uploading locale files.
     pub output: CliConfigOutput,
 }
 

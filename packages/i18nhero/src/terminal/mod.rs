@@ -81,7 +81,7 @@ pub fn print_logged_out() {
 pub fn print_not_authenticated() {
     println!(
         "{}",
-        console::style("You are now signed out of i18nhero!")
+        console::style("You are not authenticated to i18nhero!")
             .yellow()
             .bold()
     );
