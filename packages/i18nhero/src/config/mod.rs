@@ -24,6 +24,19 @@ impl CliConfigOutputFormat {
             Self::Yaml => "yml",
         }
     }
+
+    #[inline]
+    pub fn is_file_extension_match(self, ext: Option<&std::ffi::OsStr>) -> bool {
+        match self {
+            Self::Json => ext.is_some_and(|inner| inner.eq_ignore_ascii_case("json")),
+            Self::Yaml => ext.is_some_and(|inner| {
+                matches!(
+                    inner.to_string_lossy().to_lowercase().as_ref(),
+                    "yaml" | "yml"
+                )
+            }),
+        }
+    }
 }
 
 impl std::fmt::Display for CliConfigOutputFormat {

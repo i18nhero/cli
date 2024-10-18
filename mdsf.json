@@ -3,6 +3,8 @@
   "languages": {
     "bash": "shfmt",
     "fish": "fish_indent",
+    "json": "prettier",
+    "jsonc": "prettier",
     "shell": "shfmt"
   }
 }
