@@ -20,7 +20,9 @@ async fn get_organizations(
 }
 
 #[inline]
-fn select_organization(organizations: &Vec<codegen::cli_api::models::Organization>) -> usize {
+fn select_organization(
+    organizations: &Vec<codegen::cli_api::models::Organization>,
+) -> Result<usize, dialoguer::Error> {
     let mut options = Vec::with_capacity(organizations.len());
 
     for org in organizations {
@@ -32,7 +34,6 @@ fn select_organization(organizations: &Vec<codegen::cli_api::models::Organizatio
         .default(0)
         .items(&options[..])
         .interact()
-        .unwrap()
 }
 
 #[inline]
@@ -51,7 +52,9 @@ async fn get_organization_projects(
 }
 
 #[inline]
-fn select_project(projects: &Vec<codegen::cli_api::models::Project>) -> usize {
+fn select_project(
+    projects: &Vec<codegen::cli_api::models::Project>,
+) -> Result<usize, dialoguer::Error> {
     let mut options = Vec::with_capacity(projects.len());
 
     for project in projects {
@@ -63,7 +66,15 @@ fn select_project(projects: &Vec<codegen::cli_api::models::Project>) -> usize {
         .default(0)
         .items(&options[..])
         .interact()
-        .unwrap()
+}
+
+#[inline]
+fn input_output_path() -> Result<String, dialoguer::Error> {
+    dialoguer::Input::with_theme(&ColorfulTheme::default())
+        .with_prompt("Where are your locale files located?")
+        .allow_empty(false)
+        .default("lang".to_owned())
+        .interact()
 }
 
 #[inline]
@@ -82,7 +93,7 @@ pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
         return Err(CliError::NoConnectedOrganizations);
     }
 
-    let organization_index = select_organization(&organizations);
+    let organization_index = select_organization(&organizations)?;
 
     // we can unwrap here since it can't be out of bounds
     let selected_organization = organizations.get(organization_index).unwrap();
@@ -98,12 +109,17 @@ pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
         )));
     }
 
-    let project_index = select_project(&projects);
+    let project_index = select_project(&projects)?;
 
     // we can unwrap here since it can't be out of bounds
     let selected_project = projects.get(project_index).unwrap();
 
-    let config = CliConfig::new(selected_project._id.to_string());
+    let output_path = input_output_path()?;
+
+    let config = CliConfig::new(
+        selected_project._id.clone(),
+        std::path::PathBuf::from(output_path),
+    );
 
     let mut json = serde_json::to_string_pretty(&config).map_err(CliError::ConfigSerialize)?;
 

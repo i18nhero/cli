@@ -38,6 +38,8 @@ pub enum CliError {
     PullDirtyRepository(Vec<std::path::PathBuf>),
 
     GenericGit(git2::Error),
+
+    Dialoger(dialoguer::Error),
 }
 
 impl std::error::Error for CliError {}
@@ -83,6 +85,14 @@ impl core::fmt::Display for CliError {
                 write!(f, "Directory has unstaged changes. Use `--allow-dirty` to suppress this error, or stage the following files:\n\n{pretty_files}")
             }
             Self::GenericGit(e) => write!(f, "Error with git - {e}"),
+
+            Self::Dialoger(e) => write!(f, "{e}"),
         }
+    }
+}
+
+impl From<dialoguer::Error> for CliError {
+    fn from(value: dialoguer::Error) -> Self {
+        Self::Dialoger(value)
     }
 }

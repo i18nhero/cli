@@ -34,7 +34,7 @@ impl AuthConfig {
         let path = Self::get_auth_config_path();
 
         if !std::fs::exists(&path).map_err(CliError::Io)? {
-            if prompt_should_login() {
+            if prompt_should_login()? {
                 return login::run();
             }
 

@@ -8,8 +8,8 @@ use crate::{
 use super::AuthConfig;
 
 #[inline]
-pub fn run() -> Result<AuthConfig, CliError> {
-    let api_key = dialoguer::Input::with_theme(&ColorfulTheme::default())
+fn prompt_api_key() -> Result<String, dialoguer::Error> {
+    dialoguer::Input::with_theme(&ColorfulTheme::default())
         .with_prompt(format!(
             "What is your api key? ({})",
             hyperlink(
@@ -26,7 +26,11 @@ pub fn run() -> Result<AuthConfig, CliError> {
             }
         })
         .interact()
-        .unwrap();
+}
+
+#[inline]
+pub fn run() -> Result<AuthConfig, CliError> {
+    let api_key = prompt_api_key()?;
 
     let auth = AuthConfig::new(api_key.trim().to_owned());
 
@@ -38,12 +42,11 @@ pub fn run() -> Result<AuthConfig, CliError> {
 }
 
 #[inline]
-pub fn prompt_should_login() -> bool {
+pub fn prompt_should_login() -> Result<bool, dialoguer::Error> {
     print_not_authenticated();
 
     dialoguer::Confirm::with_theme(&ColorfulTheme::default())
         .with_prompt("Do you want to login now?")
         .default(true)
         .interact()
-        .unwrap()
 }
