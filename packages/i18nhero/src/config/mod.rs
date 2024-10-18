@@ -1,3 +1,5 @@
+use json_comments::{CommentSettings, StripComments};
+
 use crate::{codegen::web_api::models::FileFormat, error::CliError};
 
 pub const CONFIG_PATH: &str = "i18nhero.json";
@@ -141,8 +143,12 @@ impl CliConfig {
     #[inline]
     pub fn load(path: impl AsRef<std::path::Path>) -> Result<Self, CliError> {
         match std::fs::read_to_string(path) {
-            Ok(content) => serde_json::from_str::<Self>(&content).map_err(CliError::ConfigParse),
+            Ok(content) => {
+                let stripped =
+                    StripComments::with_settings(CommentSettings::c_style(), content.as_bytes());
 
+                serde_json::from_reader(stripped).map_err(CliError::ConfigParse)
+            }
             Err(error) => {
                 if error.kind() == std::io::ErrorKind::NotFound {
                     Err(CliError::ConfigNotFound)
