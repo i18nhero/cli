@@ -18,22 +18,20 @@ fn read_locales(
     folder: &std::path::Path,
     file_format: CliConfigOutputFormat,
 ) -> Result<Vec<PushLocaleInputFile>, CliError> {
-    let expected_file_ext = file_format.file_extension();
-
-    let file_format = FileFormat::from(file_format);
+    let output_file_format = FileFormat::from(file_format);
 
     let mut locales = Vec::new();
 
     for entry in (std::fs::read_dir(folder).map_err(CliError::LocaleRead)?).flatten() {
         let p = entry.path();
 
-        if p.is_file() && p.extension().is_some_and(|ext| ext == expected_file_ext) {
+        if p.is_file() && file_format.is_file_extension_match(p.extension()) {
             if let Some(stem) = p.file_stem() {
                 let raw = std::fs::read_to_string(&p).map_err(CliError::LocaleRead)?;
 
                 let locale = PushLocaleInputFile {
                     file_name: stem.to_string_lossy().to_string(),
-                    file_format,
+                    file_format: output_file_format,
                     content: raw,
                 };
 
