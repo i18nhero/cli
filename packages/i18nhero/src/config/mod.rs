@@ -1,5 +1,3 @@
-use std::str::FromStr;
-
 use crate::{codegen::web_api::models::FileFormat, error::CliError};
 
 pub const CONFIG_PATH: &str = "i18nhero.json";
@@ -48,7 +46,7 @@ pub struct CliConfigOutput {
     pub format: CliConfigOutputFormat,
 
     /// Defines whether identifiers that are missing translations should be downloaded.
-    #[serde(default)]
+    #[serde(default = "CliConfigOutput::default_keep_empty_fields")]
     pub keep_empty_fields: Option<bool>,
 
     /// Defines whether the locale files should be a flat `string <-> string` map or a multi layered map.
@@ -67,14 +65,24 @@ pub struct CliConfigOutput {
     /// }
     /// ```
     ///
-    #[serde(default)]
+    #[serde(default = "CliConfigOutput::default_flat")]
     pub flat: Option<bool>,
 }
 
 impl CliConfigOutput {
     #[inline]
-    fn default_path() -> std::path::PathBuf {
-        std::path::PathBuf::from_str("lang").unwrap()
+    pub fn default_path() -> std::path::PathBuf {
+        std::path::PathBuf::from("lang")
+    }
+
+    #[inline]
+    const fn default_keep_empty_fields() -> Option<bool> {
+        Some(false)
+    }
+
+    #[inline]
+    const fn default_flat() -> Option<bool> {
+        Some(false)
     }
 }
 
@@ -84,8 +92,8 @@ impl Default for CliConfigOutput {
         Self {
             path: Self::default_path(),
             format: CliConfigOutputFormat::default(),
-            keep_empty_fields: Some(false),
-            flat: Some(false),
+            keep_empty_fields: Self::default_keep_empty_fields(),
+            flat: Self::default_flat(),
         }
     }
 }
@@ -117,10 +125,16 @@ impl Default for CliConfig {
 
 impl CliConfig {
     #[inline]
-    pub fn new(project_id: String) -> Self {
+    pub fn new(project_id: String, output_path: std::path::PathBuf) -> Self {
         Self {
+            schema: Self::default_schema_location(),
             project_id,
-            ..Default::default()
+            output: CliConfigOutput {
+                path: output_path,
+                format: CliConfigOutputFormat::default(),
+                flat: CliConfigOutput::default_flat(),
+                keep_empty_fields: CliConfigOutput::default_keep_empty_fields(),
+            },
         }
     }
 
