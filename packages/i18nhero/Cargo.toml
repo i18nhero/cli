@@ -30,6 +30,7 @@ console.workspace = true
 dialoguer.workspace = true
 dirs.workspace = true
 git2.workspace = true
+json_comments = "0.2.2"
 reqwest.workspace = true
 schemars = { workspace = true, optional = true }
 serde.workspace = true
