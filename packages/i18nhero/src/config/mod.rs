@@ -26,6 +26,15 @@ impl CliConfigOutputFormat {
     }
 }
 
+impl std::fmt::Display for CliConfigOutputFormat {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Json => f.write_str("json"),
+            Self::Yaml => f.write_str("yaml"),
+        }
+    }
+}
+
 impl From<CliConfigOutputFormat> for FileFormat {
     fn from(value: CliConfigOutputFormat) -> Self {
         match value {
@@ -127,13 +136,17 @@ impl Default for CliConfig {
 
 impl CliConfig {
     #[inline]
-    pub fn new(project_id: String, output_path: std::path::PathBuf) -> Self {
+    pub fn new(
+        project_id: String,
+        output_path: std::path::PathBuf,
+        file_format: CliConfigOutputFormat,
+    ) -> Self {
         Self {
             schema: Self::default_schema_location(),
             project_id,
             output: CliConfigOutput {
                 path: output_path,
-                format: CliConfigOutputFormat::default(),
+                format: file_format,
                 flat: CliConfigOutput::default_flat(),
                 keep_empty_fields: CliConfigOutput::default_keep_empty_fields(),
             },

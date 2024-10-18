@@ -4,7 +4,7 @@ use crate::{
     auth::AuthConfig,
     codegen::{self, setup_cli_api_configuration},
     commands::init::InitCommandArguments,
-    config::{CliConfig, CONFIG_PATH},
+    config::{CliConfig, CliConfigOutputFormat, CONFIG_PATH},
     error::CliError,
     terminal::print_configuration_file_created,
 };
@@ -78,6 +78,18 @@ fn input_output_path() -> Result<String, dialoguer::Error> {
 }
 
 #[inline]
+fn select_file_format(
+    items: &[CliConfigOutputFormat],
+) -> Result<CliConfigOutputFormat, dialoguer::Error> {
+    dialoguer::Select::with_theme(&ColorfulTheme::default())
+        .with_prompt("What file format does your locale files use?")
+        .items(items)
+        .default(0)
+        .interact()
+        .map(|index| items.get(index).unwrap().to_owned())
+}
+
+#[inline]
 pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
     if !arguments.overwrite && std::fs::exists(CONFIG_PATH).map_err(CliError::Io)? {
         return Err(CliError::ConfigAlreadyExists);
@@ -116,9 +128,13 @@ pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
 
     let output_path = input_output_path()?;
 
+    let file_format =
+        select_file_format(&[CliConfigOutputFormat::Json, CliConfigOutputFormat::Yaml])?;
+
     let config = CliConfig::new(
         selected_project._id.clone(),
         std::path::PathBuf::from(output_path),
+        file_format,
     );
 
     let mut json = serde_json::to_string_pretty(&config).map_err(CliError::ConfigSerialize)?;
