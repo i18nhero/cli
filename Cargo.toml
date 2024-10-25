@@ -30,7 +30,7 @@ categories = [
 [workspace.dependencies]
 anyhow = "1.0.91"
 bytes = "1.7.2"
-clap = { version = "4.5.18", features = ["derive"] }
+clap = { version = "4.5.20", features = ["derive"] }
 clap_complete = "4.5.29"
 console = { version = "0.15.8" }
 dialoguer = { version = "0.11.0" }
