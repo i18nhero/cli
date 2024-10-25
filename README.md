@@ -22,7 +22,6 @@ Commands:
 Options:
   -h, --help     Print help
   -V, --version  Print version
-
 ```
 
 <!-- END_SECTION:base-command-help -->
@@ -63,10 +62,10 @@ If you do not have Cargo installed, you need to [install it first](https://www.r
 
 ### npm/npx
 
-You can install @i18nhero/cli using [npm](https://www.npmjs.com/package/@i18nhero/cli):
+You can install i18nhero using [npm](https://www.npmjs.com/package/i18nhero):
 
 ```shell
-npm install -g @i18nhero/cli
+npm install -g i18nhero
 
 i18nhero --help
 ```
@@ -74,7 +73,7 @@ i18nhero --help
 or run it directly using npx:
 
 ```shell
-npx @i18nhero/cli --help
+npx i18nhero --help
 ```
 
 ## Getting started
@@ -88,7 +87,6 @@ $ i18nhero init
 You are not authenticated to i18nhero!
 ✔ Do you want to login now? · yes
 ? What is your api key? (https://i18nhero.com/settings/api) ›
-
 ```
 
 After authenticating you can select the desired organization:
@@ -103,7 +101,6 @@ You are now signed in to i18nhero!
 ❯ i18nhero
   demo-organization-1
   demo-organization-2
-
 ```
 
 Then you will be asked which project you wish to setup.
@@ -118,7 +115,6 @@ You are now signed in to i18nhero!
 ? Project ›
 ❯  @i18nhero/i18nhero.com
    @i18nhero/cli
-
 ```
 
 You can now **download** your locale files by running the `i18nhero pull` command and **upload** your locale files using the `i18nhero push` command.
@@ -192,7 +188,6 @@ Arguments:
 Options:
   -h, --help     Print help
   -V, --version  Print version
-
 ```
 
 <!-- END_SECTION:completions-command-help -->
@@ -254,7 +249,6 @@ Options:
       --overwrite  Overwrite existing config
   -h, --help       Print help
   -V, --version    Print version
-
 ```
 
 <!-- END_SECTION:init-command-help -->
@@ -284,7 +278,6 @@ Options:
 
   -V, --version
           Print version
-
 ```
 
 <!-- END_SECTION:pull-command-help -->
@@ -304,7 +297,6 @@ Options:
       --api-key <API_KEY>  Use for authentication instead of global auth config
   -h, --help               Print help
   -V, --version            Print version
-
 ```
 
 <!-- END_SECTION:push-command-help -->
@@ -323,7 +315,6 @@ Usage: i18nhero login
 Options:
   -h, --help     Print help
   -V, --version  Print version
-
 ```
 
 <!-- END_SECTION:login-command-help -->
@@ -340,7 +331,6 @@ Usage: i18nhero logout
 Options:
   -h, --help     Print help
   -V, --version  Print version
-
 ```
 
 <!-- END_SECTION:logout-command-help -->
@@ -362,7 +352,6 @@ Arguments:
 Options:
   -h, --help     Print help
   -V, --version  Print version
-
 ```
 
 <!-- END_SECTION:completions-command-help -->

@@ -1,18 +1,12 @@
 use clap::Parser;
-use commands::{Cli, CliCommand};
-use config::{CliConfig, CONFIG_PATH};
-use error::CliError;
-
-mod auth;
-mod codegen;
-mod commands;
-mod completions;
-mod config;
-mod error;
-mod init;
-mod pull;
-mod push;
-mod terminal;
+use i18nhero::{
+    auth,
+    commands::{Cli, CliCommand},
+    completions,
+    config::{CliConfig, CONFIG_PATH},
+    error::CliError,
+    init, pull, push, terminal,
+};
 
 #[inline]
 async fn _main() -> Result<(), CliError> {

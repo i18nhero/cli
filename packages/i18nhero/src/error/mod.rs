@@ -92,6 +92,7 @@ impl core::fmt::Display for CliError {
 }
 
 impl From<dialoguer::Error> for CliError {
+    #[inline]
     fn from(value: dialoguer::Error) -> Self {
         Self::Dialoger(value)
     }

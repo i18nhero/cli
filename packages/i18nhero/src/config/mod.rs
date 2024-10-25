@@ -4,8 +4,7 @@ use crate::{codegen::web_api::models::FileFormat, error::CliError};
 
 pub const CONFIG_PATH: &str = "i18nhero.json";
 
-#[derive(serde::Serialize, serde::Deserialize, Default, Clone, Copy)]
-#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
+#[derive(serde::Serialize, serde::Deserialize, Default, Clone, Copy, schemars::JsonSchema)]
 #[cfg_attr(test, derive(Debug, PartialEq, Eq))]
 pub enum CliConfigOutputFormat {
     #[default]
@@ -40,6 +39,7 @@ impl CliConfigOutputFormat {
 }
 
 impl std::fmt::Display for CliConfigOutputFormat {
+    #[inline]
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Json => f.write_str("json"),
@@ -49,6 +49,7 @@ impl std::fmt::Display for CliConfigOutputFormat {
 }
 
 impl From<CliConfigOutputFormat> for FileFormat {
+    #[inline]
     fn from(value: CliConfigOutputFormat) -> Self {
         match value {
             CliConfigOutputFormat::Json => Self::Json,
@@ -57,8 +58,7 @@ impl From<CliConfigOutputFormat> for FileFormat {
     }
 }
 
-#[derive(serde::Serialize, serde::Deserialize)]
-#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
+#[derive(serde::Serialize, serde::Deserialize, schemars::JsonSchema)]
 #[cfg_attr(test, derive(Debug, PartialEq, Eq))]
 pub struct CliConfigOutput {
     /// Defines where locale files should be downloaded to, and uploaded from.
@@ -122,8 +122,7 @@ impl Default for CliConfigOutput {
     }
 }
 
-#[derive(serde::Serialize, serde::Deserialize)]
-#[cfg_attr(feature = "json-schema", derive(schemars::JsonSchema))]
+#[derive(serde::Serialize, serde::Deserialize, schemars::JsonSchema)]
 #[cfg_attr(test, derive(Debug, PartialEq, Eq))]
 pub struct CliConfig {
     #[serde(rename = "$schema", default = "CliConfig::default_schema_location")]
@@ -202,7 +201,7 @@ impl CliConfig {
 
 #[cfg(test)]
 mod test_config {
-    use crate::CliConfig;
+    use crate::config::CliConfig;
 
     #[test]
     fn config_should_be_serializable() {
@@ -223,7 +222,6 @@ mod test_config {
     }
 
     #[test]
-    #[cfg(feature = "json-schema")]
     fn json_schema_should_be_serializable() {
         serde_json::to_string_pretty(&schemars::schema_for!(CliConfig))
             .expect("it to be serializable");

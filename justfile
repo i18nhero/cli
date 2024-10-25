@@ -20,7 +20,7 @@ format:
 
 lint:
     cargo fmt -- --check --color always
-    cargo clippy --all-targets --all-features -- -D warnings -Dclippy::perf -Dclippy::missing_inline_in_public_items
+    cargo clippy --all-targets --all-features -- -D warnings -Dclippy::perf
 
 lint-aggressive:
     cargo clean
@@ -52,7 +52,7 @@ generate-web-api:
     cargo fmt
 
 update-help:
-    python3 scripts/update-readme-help.py
+    cargo run -p i18nhero-codegen
 
 generate-cli-api:
     rm -rf cli_api
