@@ -5,7 +5,7 @@ This tool allows you to manage your [i18nhero](https://i18nhero.com) locale file
 <!-- START_SECTION:base-command-help -->
 
 ```
-i18nhero 0.0.0
+i18nhero 0.0.1-dev
 CLI tool for interacting with locales hosted on i18nhero.com
 
 Usage: i18nhero <COMMAND>
@@ -120,6 +120,8 @@ You are now signed in to i18nhero!
 You can now **download** your locale files by running the `i18nhero pull` command and **upload** your locale files using the `i18nhero push` command.
 
 ## Configuration
+
+This CLI can be configured by creating a file called `i18nhero.config.json` in the root of your project.
 
 ```jsonc
 {
