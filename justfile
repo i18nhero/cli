@@ -8,7 +8,7 @@ build-local:
     sudo cp target/release/i18nhero /usr/local/bin/i18nhero-local
 
 dist:
-    cargo dist init --yes
+    dist init --yes
 
 format:
     just --fmt --unstable .
