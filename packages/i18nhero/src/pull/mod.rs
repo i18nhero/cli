@@ -1,3 +1,5 @@
+use path_absolutize::Absolutize;
+
 use crate::{
     auth::AuthConfig,
     codegen::{
@@ -73,7 +75,10 @@ async fn save_locales(
 }
 
 fn check_if_dirty_repository(path: &std::path::Path) -> Result<(), CliError> {
-    let locale_dir = path.canonicalize().map_err(CliError::Io)?;
+    let locale_dir = path
+        .absolutize()
+        .map_or_else(|_| path.canonicalize(), |p| Ok(p.into_owned()))
+        .map_err(CliError::Io)?;
 
     if let Ok(repo) = git2::Repository::discover(path) {
         let mut repo_opts = git2::StatusOptions::new();
@@ -88,23 +93,27 @@ fn check_if_dirty_repository(path: &std::path::Path) -> Result<(), CliError> {
             .iter()
         {
             if let Some(path) = status.path().map(std::path::PathBuf::from) {
-                match status.status() {
-                    git2::Status::CURRENT => (),
-                    git2::Status::INDEX_NEW
-                    | git2::Status::INDEX_MODIFIED
-                    | git2::Status::INDEX_DELETED
-                    | git2::Status::INDEX_RENAMED
-                    | git2::Status::INDEX_TYPECHANGE => continue,
-                    _ => {
-                        if path
-                            .canonicalize()
-                            .map_err(CliError::Io)?
-                            .starts_with(&locale_dir)
-                        {
-                            dirty_files.push(path);
-                        }
+                let dirty = matches!(
+                    status.status(),
+                    git2::Status::WT_NEW
+                        | git2::Status::WT_MODIFIED
+                        | git2::Status::WT_DELETED
+                        | git2::Status::WT_RENAMED
+                        | git2::Status::WT_TYPECHANGE
+                        // NOTE: should this be removed?
+                        | git2::Status::CONFLICTED
+                );
+
+                if dirty {
+                    let is_inside_locale_directory = path
+                        .absolutize()
+                        .map_or_else(|_| path.canonicalize(), |p| Ok(p.into_owned()))
+                        .is_ok_and(|p| p.starts_with(&locale_dir));
+
+                    if is_inside_locale_directory {
+                        dirty_files.push(path);
                     }
-                };
+                }
             }
         }
 

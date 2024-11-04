@@ -27,6 +27,7 @@ dialoguer.workspace = true
 dirs.workspace = true
 git2.workspace = true
 json_comments.workspace = true
+path-absolutize = { version = "3.1.1", features = ["once_cell_cache"] }
 reqwest.workspace = true
 schemars.workspace = true
 serde.workspace = true
