@@ -16,6 +16,8 @@ pub mod create_translation_input;
 pub use self::create_translation_input::CreateTranslationInput;
 pub mod email_login_input;
 pub use self::email_login_input::EmailLoginInput;
+pub mod email_missing_verification;
+pub use self::email_missing_verification::EmailMissingVerification;
 pub mod email_register_input;
 pub use self::email_register_input::EmailRegisterInput;
 pub mod export_project_output;
