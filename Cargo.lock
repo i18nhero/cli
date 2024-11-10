@@ -671,7 +671,7 @@ dependencies = [
 
 [[package]]
 name = "i18nhero"
-version = "0.0.1-dev"
+version = "0.0.1"
 dependencies = [
  "bytes",
  "clap",
@@ -697,7 +697,7 @@ dependencies = [
 
 [[package]]
 name = "i18nhero-codegen"
-version = "0.0.1-dev"
+version = "0.0.1"
 dependencies = [
  "anyhow",
  "i18nhero",
