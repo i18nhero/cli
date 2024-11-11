@@ -7,5 +7,5 @@ pub struct PushCommandArguments {
     pub api_key: Option<String>,
 
     #[arg(long, hide = true)]
-    pub web_api_host: Option<String>,
+    pub api_host: Option<String>,
 }

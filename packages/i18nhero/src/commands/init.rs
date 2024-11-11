@@ -7,5 +7,5 @@ pub struct InitCommandArguments {
     pub overwrite: bool,
 
     #[arg(long, hide = true)]
-    pub cli_api_host: Option<String>,
+    pub api_host: Option<String>,
 }

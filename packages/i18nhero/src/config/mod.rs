@@ -1,6 +1,6 @@
 use json_comments::{CommentSettings, StripComments};
 
-use crate::{codegen::web_api::models::FileFormat, error::CliError};
+use crate::{codegen::public_api::models::FileFormat, error::CliError};
 
 pub const CONFIG_PATH: &str = "i18nhero.json";
 

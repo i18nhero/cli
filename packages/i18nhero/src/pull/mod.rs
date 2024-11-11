@@ -3,11 +3,11 @@ use path_absolutize::Absolutize;
 use crate::{
     auth::AuthConfig,
     codegen::{
-        setup_web_api_configuration,
-        web_api::{
+        public_api::{
             self,
             models::{ExportProjectOutput, FileFormat, PartialExportProjectConfigInput},
         },
+        setup_api_configuration,
     },
     commands::pull::PullCommandArguments,
     config::{CliConfig, CliConfigOutput, CliConfigOutputFormat},
@@ -17,7 +17,7 @@ use crate::{
 
 #[inline]
 async fn fetch_locales(
-    web_api_config: &web_api::apis::configuration::Configuration,
+    api_config: &public_api::apis::configuration::Configuration,
     api_key: &str,
     project_id: &str,
     flags: &CliConfigOutput,
@@ -28,7 +28,7 @@ async fn fetch_locales(
         keep_empty_fields: flags.keep_empty_fields,
     };
 
-    web_api::apis::projects_api::pull_project(web_api_config, project_id, api_key, body)
+    public_api::apis::projects_api::pull_project(api_config, project_id, api_key, body)
         .await
         .map_err(CliError::PullLocaleHttp)
 }
@@ -143,9 +143,9 @@ pub async fn run(arguments: &PullCommandArguments, config: &CliConfig) -> Result
         AuthConfig::load()?.api_key
     };
 
-    let web_api_config = setup_web_api_configuration(arguments.web_api_host.clone());
+    let api_config = setup_api_configuration(arguments.api_host.clone());
 
-    let locales = fetch_locales(&web_api_config, &auth, &config.project_id, &config.output).await?;
+    let locales = fetch_locales(&api_config, &auth, &config.project_id, &config.output).await?;
 
     save_locales(config, locales).await
 }

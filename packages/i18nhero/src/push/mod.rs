@@ -1,11 +1,11 @@
 use crate::{
     auth::AuthConfig,
     codegen::{
-        setup_web_api_configuration,
-        web_api::{
+        public_api::{
             self,
             models::{FileFormat, PushLocaleInput, PushLocaleInputFile},
         },
+        setup_api_configuration,
     },
     commands::push::PushCommandArguments,
     config::{CliConfig, CliConfigOutputFormat},
@@ -45,13 +45,13 @@ fn read_locales(
 
 #[inline]
 async fn upload_locales(
-    web_api_config: &web_api::apis::configuration::Configuration,
+    api_config: &public_api::apis::configuration::Configuration,
     api_key: &str,
     project_id: &str,
     locales: Vec<PushLocaleInputFile>,
-) -> Result<web_api::models::PushLocaleResult, CliError> {
-    web_api::apis::projects_api::push_locales_to_project(
-        web_api_config,
+) -> Result<public_api::models::PushLocaleResult, CliError> {
+    public_api::apis::projects_api::push_locales_to_project(
+        api_config,
         project_id,
         api_key,
         PushLocaleInput { files: locales },
@@ -66,7 +66,7 @@ pub async fn run(arguments: &PushCommandArguments, config: &CliConfig) -> Result
 
     let locales = read_locales(&config.output.path, config.output.format)?;
 
-    let web_api_config = setup_web_api_configuration(arguments.web_api_host.clone());
+    let api_config = setup_api_configuration(arguments.api_host.clone());
 
     if locales.is_empty() {
         // TODO: convert to error?
@@ -80,7 +80,7 @@ pub async fn run(arguments: &PushCommandArguments, config: &CliConfig) -> Result
 
         let locale_count = locales.len();
 
-        upload_locales(&web_api_config, &auth, &config.project_id, locales).await?;
+        upload_locales(&api_config, &auth, &config.project_id, locales).await?;
 
         print_pushed_locales(locale_count);
     }
