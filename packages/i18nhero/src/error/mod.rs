@@ -4,12 +4,12 @@ use crate::codegen;
 pub enum CliError {
     Io(std::io::Error),
     PushLocaleHttp(
-        codegen::web_api::apis::Error<
-            codegen::web_api::apis::projects_api::PushLocalesToProjectError,
+        codegen::public_api::apis::Error<
+            codegen::public_api::apis::projects_api::PushLocalesToProjectError,
         >,
     ),
     PullLocaleHttp(
-        codegen::web_api::apis::Error<codegen::web_api::apis::projects_api::PullProjectError>,
+        codegen::public_api::apis::Error<codegen::public_api::apis::projects_api::PullProjectError>,
     ),
     ConfigAlreadyExists,
     MissingProjectId,
@@ -27,11 +27,13 @@ pub enum CliError {
     AuthConfigSave(std::io::Error),
     AuthConfigLoad(std::io::Error),
     GetOrganizations(
-        codegen::cli_api::apis::Error<codegen::cli_api::apis::default_api::GetOrganizationsError>,
+        codegen::public_api::apis::Error<
+            codegen::public_api::apis::organizations_api::GetOrganizationsError,
+        >,
     ),
     GetOrganizationProjects(
-        codegen::cli_api::apis::Error<
-            codegen::cli_api::apis::default_api::GetOrganizationProjectsError,
+        codegen::public_api::apis::Error<
+            codegen::public_api::apis::organizations_api::GetOrganizationProjectsError,
         >,
     ),
 

@@ -2,7 +2,7 @@ use dialoguer::{theme::ColorfulTheme, Select};
 
 use crate::{
     auth::AuthConfig,
-    codegen::{self, setup_cli_api_configuration},
+    codegen::{self, setup_api_configuration},
     commands::init::InitCommandArguments,
     config::{CliConfig, CliConfigOutputFormat, CONFIG_PATH},
     error::CliError,
@@ -11,17 +11,17 @@ use crate::{
 
 #[inline]
 async fn get_organizations(
-    configuration: &codegen::cli_api::apis::configuration::Configuration,
+    configuration: &codegen::public_api::apis::configuration::Configuration,
     api_key: &str,
-) -> Result<Vec<codegen::cli_api::models::Organization>, CliError> {
-    codegen::cli_api::apis::default_api::get_organizations(configuration, api_key)
+) -> Result<Vec<codegen::public_api::models::Organization>, CliError> {
+    codegen::public_api::apis::organizations_api::get_organizations(configuration, api_key)
         .await
         .map_err(CliError::GetOrganizations)
 }
 
 #[inline]
 fn select_organization(
-    organizations: &Vec<codegen::cli_api::models::Organization>,
+    organizations: &Vec<codegen::public_api::models::Organization>,
 ) -> Result<usize, dialoguer::Error> {
     let mut options = Vec::with_capacity(organizations.len());
 
@@ -38,11 +38,11 @@ fn select_organization(
 
 #[inline]
 async fn get_organization_projects(
-    configuration: &codegen::cli_api::apis::configuration::Configuration,
+    configuration: &codegen::public_api::apis::configuration::Configuration,
     api_key: &str,
     organization_id: &str,
-) -> Result<Vec<codegen::cli_api::models::Project>, CliError> {
-    codegen::cli_api::apis::default_api::get_organization_projects(
+) -> Result<Vec<codegen::public_api::models::Project>, CliError> {
+    codegen::public_api::apis::organizations_api::get_organization_projects(
         configuration,
         api_key,
         organization_id,
@@ -53,7 +53,7 @@ async fn get_organization_projects(
 
 #[inline]
 fn select_project(
-    projects: &Vec<codegen::cli_api::models::Project>,
+    projects: &Vec<codegen::public_api::models::Project>,
 ) -> Result<usize, dialoguer::Error> {
     let mut options = Vec::with_capacity(projects.len());
 
@@ -97,9 +97,9 @@ pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
 
     let auth = AuthConfig::load()?;
 
-    let cli_api_config = setup_cli_api_configuration(arguments.cli_api_host.clone());
+    let api_config = setup_api_configuration(arguments.api_host.clone());
 
-    let organizations = get_organizations(&cli_api_config, &auth.api_key).await?;
+    let organizations = get_organizations(&api_config, &auth.api_key).await?;
 
     if organizations.is_empty() {
         return Err(CliError::NoConnectedOrganizations);
@@ -111,8 +111,7 @@ pub async fn run(arguments: &InitCommandArguments) -> Result<(), CliError> {
     let selected_organization = organizations.get(organization_index).unwrap();
 
     let projects =
-        get_organization_projects(&cli_api_config, &auth.api_key, &selected_organization._id)
-            .await?;
+        get_organization_projects(&api_config, &auth.api_key, &selected_organization._id).await?;
 
     if projects.is_empty() {
         return Err(CliError::NoAvailableProjects((
