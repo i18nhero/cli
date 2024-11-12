@@ -43,9 +43,9 @@ changelog:
 update-help:
     cargo run -p i18nhero-codegen
 
-generate-bindings-api:
+generate-api-bindings:
     rm -rf public_api
-    npx @openapitools/openapi-generator-cli generate -g rust -o public_api -i http://localhost:5001/docs-json --global-property=modelDocs=false,apiDocs=false
+    npx @openapitools/openapi-generator-cli generate -g rust -o public_api -i https://api.i18nhero.com/docs-json --global-property=modelDocs=false,apiDocs=false
     find ./public_api -type f -exec sed -i 's/crate::/crate::codegen::public_api::/g' {} \;
     mkdir -p packages/i18nhero/src/codegen/public_api
     rm -rf packages/i18nhero/src/codegen/public_api
@@ -55,7 +55,7 @@ generate-bindings-api:
     cargo fmt
 
 precommit:
-    just generate-bindings-api
+    just generate-api-bindings
     just changelog
     cargo clean
     just dist
