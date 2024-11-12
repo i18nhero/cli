@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CliConfig",
+  "type": "object",
+  "required": ["output", "project_id"],
+  "properties": {
+    "$schema": {
+      "default": "https://raw.githubusercontent.com/i18nhero/cli/main/schemas/v0.0.3-dev/i18nhero.schema.json",
+      "type": "string"
+    },
+    "output": {
+      "description": "Configuration for downloading and uploading locale files.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CliConfigOutput"
+        }
+      ]
+    },
+    "project_id": {
+      "description": "Used to define the linked project.",
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "CliConfigOutput": {
+      "type": "object",
+      "properties": {
+        "flat": {
+          "description": "Defines whether the locale files should be a flat `string <-> string` map or a multi layered map.\n\nA point (`.`) in the identifier name is used to define multi-layered keys when `flat` is set to false.\n\nThe identifier `pages.dashboard.title` will be expanded to the following:\n\n```json { \"pages\": { \"dashboard\": { \"title\": \"\" } } } ```",
+          "default": false,
+          "type": ["boolean", "null"]
+        },
+        "format": {
+          "description": "Defines the file format used when uploading and downloading locale files.",
+          "default": "json",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CliConfigOutputFormat"
+            }
+          ]
+        },
+        "keep_empty_fields": {
+          "description": "Defines whether identifiers that are missing translations should be downloaded.",
+          "default": false,
+          "type": ["boolean", "null"]
+        },
+        "path": {
+          "description": "Defines where locale files should be downloaded to, and uploaded from.",
+          "default": "lang",
+          "type": "string"
+        }
+      }
+    },
+    "CliConfigOutputFormat": {
+      "type": "string",
+      "enum": ["json", "yaml"]
+    }
+  }
+}
