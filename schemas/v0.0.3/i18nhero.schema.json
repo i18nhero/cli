@@ -5,7 +5,7 @@
   "required": ["output", "project_id"],
   "properties": {
     "$schema": {
-      "default": "https://raw.githubusercontent.com/i18nhero/cli/main/schemas/v0.0.3-dev/i18nhero.schema.json",
+      "default": "https://raw.githubusercontent.com/i18nhero/cli/main/schemas/v0.0.3/i18nhero.schema.json",
       "type": "string"
     },
     "output": {
