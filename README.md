@@ -5,7 +5,7 @@ This tool allows you to manage your [i18nhero](https://i18nhero.com) locale file
 <!-- START_SECTION:base-command-help -->
 
 ```
-i18nhero 0.0.3-dev
+i18nhero 0.0.3
 CLI tool for interacting with locales hosted on i18nhero.com
 
 Usage: i18nhero <COMMAND>
