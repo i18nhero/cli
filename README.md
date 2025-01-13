@@ -185,7 +185,7 @@ Generate shell completions
 Usage: i18nhero completions <SHELL>
 
 Arguments:
-  <SHELL>  [possible values: bash, elvish, fish, powershell, zsh]
+  <SHELL>  [possible values: bash, elvish, fish, nushell, powershell, zsh]
 
 Options:
   -h, --help     Print help

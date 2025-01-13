@@ -22,12 +22,13 @@ eula = false
 bytes.workspace = true
 clap.workspace = true
 clap_complete.workspace = true
+clap_complete_nushell.workspace = true
 console.workspace = true
 dialoguer.workspace = true
 dirs.workspace = true
 git2.workspace = true
 json_comments.workspace = true
-path-absolutize = { version = "3.1.1", features = ["once_cell_cache"] }
+path-absolutize.workspace = true
 reqwest.workspace = true
 schemars.workspace = true
 serde.workspace = true
