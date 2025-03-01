@@ -55,7 +55,7 @@ reqwest = { version = "0.12.12", default-features = false, features = [
   "rustls-tls",
   "zstd",
 ] }
-schemars = "0.8.21"
+schemars = "0.8.22"
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.139"
 serde_repr = "0.1.19"
