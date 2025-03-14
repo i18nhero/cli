@@ -3,20 +3,20 @@ updates:
   - package-ecosystem: cargo
     directory: /
     schedule:
-      interval: monthly
+      interval: weekly
     open-pull-requests-limit: 100
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: monthly
+      interval: weekly
     open-pull-requests-limit: 100
   - package-ecosystem: cargo
     directory: /packages/i18nhero
     schedule:
-      interval: monthly
+      interval: weekly
     open-pull-requests-limit: 100
   - package-ecosystem: cargo
     directory: /packages/i18nhero-codegen
     schedule:
-      interval: monthly
+      interval: weekly
     open-pull-requests-limit: 100
