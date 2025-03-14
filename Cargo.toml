@@ -28,7 +28,7 @@ categories = [
 ]
 
 [workspace.dependencies]
-anyhow = "1.0.96"
+anyhow = "1.0.97"
 bytes = "1.10.0"
 clap = { version = "4.5.32", features = ["derive"] }
 clap_complete = "4.5.46"
