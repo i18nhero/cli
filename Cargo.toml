@@ -30,7 +30,7 @@ categories = [
 [workspace.dependencies]
 anyhow = "1.0.97"
 bytes = "1.10.1"
-clap = { version = "4.5.35", features = ["derive"] }
+clap = { version = "4.5.37", features = ["derive"] }
 clap_complete = "4.5.47"
 clap_complete_nushell = "4.5.5"
 console = { version = "0.15.11" }
