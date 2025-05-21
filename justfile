@@ -65,6 +65,7 @@ precommit:
     just lint
     just test
     typos --exclude CHANGELOG.md .
+    just dist
 
 cross-target-install TARGET:
     rustup target add {{ TARGET }}
