@@ -43,7 +43,7 @@ i18nhero = { path = "packages/i18nhero", version = "0.0.3" }
 json_comments = "0.2.2"
 path-absolutize = { version = "3.1.1", features = ["once_cell_cache"] }
 regex = "1.11.1"
-reqwest = { version = "0.12.18", default-features = false, features = [
+reqwest = { version = "0.12.21", default-features = false, features = [
   "brotli",
   "charset",
   "cookies",
